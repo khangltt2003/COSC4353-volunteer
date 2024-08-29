@@ -1,29 +1,23 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Event, CustomUser
+from .models import Event, User
 from django.core.validators import RegexValidator
 from django.contrib.auth.password_validation import validate_password
-
 
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = "__all__"
     
-class CustomUserSerializer(serializers.ModelSerializer):
-  user = UserSerializer(many=False,read_only=True)
-  fullname = serializers.CharField(max_length=50)
-  role = serializers.CharField(max_length=10)
-  address = serializers.CharField(max_length=200)
-  city = serializers.CharField(max_length=100)
-  state = serializers.CharField(max_length=2)
-  zipcode = serializers.CharField()
-  skills = serializers.CharField(max_length=50)
-  fields = serializers.CharField(max_length= 50)
+  # fullname = serializers.CharField(max_length=50)
+  # role = serializers.CharField(max_length=10)
+  # address = serializers.CharField(max_length=200)
+  # city = serializers.CharField(max_length=100)
+  # state = serializers.CharField(max_length=2)
+  # zipcode = serializers.CharField()
+  # skills = serializers.CharField(max_length=50)
+  # fields = serializers.CharField(max_length= 50)
   
-  class Meta:
-    model = CustomUser
-    fields = ["user", "fullname", "role", "address", "city", "state", "zipcode", "skills", "fields"]
+
   
 class UserRegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
