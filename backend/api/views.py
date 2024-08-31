@@ -4,13 +4,13 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth.models import User
 from .models import UserProfile, Event
-from .serializers import UserSerializer, UserProfileSerializer, EventSerializer
+from .serializers import UserSerializer, UserProfileSerializer, EventSerializer, UserRegistrationSerializer
 from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 def register(request):
   if request.method == 'POST':
-    serializer = UserSerializer(data=request.data)
+    serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -29,14 +29,13 @@ def user_profile(request):
     serializer = UserProfileSerializer(profile)
     return Response(serializer.data)
 
-  elif request.method == "POST":
-    requested_data = request.data.copy()
-    requested_data['user'] = user.id
-    serializer = UserProfileSerializer(data = requested_data, context={'request': request})
+  elif request.method == 'POST':
+    serializer = UserProfileSerializer(data=request.data)
     if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status =status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(user=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
   elif request.method == 'PATCH':
     serializer = UserProfileSerializer(user.profile, data=request.data, partial=True)
