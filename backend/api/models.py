@@ -1,62 +1,32 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
+from django.db import models
 
-# Create your models here.
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    skills = models.TextField() 
+    interested_fields = models.TextField() 
+    zipcode = models.CharField(max_length=10)
 
-class User(models.Model):
-    fullname = models.CharField(max_length=50)
-    role = models.CharField(max_length=10)
-    # address = models.CharField(max_length=200)
-    # city = models.CharField(max_length=100)
-    # state = models.CharField(max_length=2)
-    # required_skills = models.ManyToManyField('Skill', blank=True)
-    # fields = models.ManyToManyField('Field', blank=True)
-    # events = models.ManyToManyField('Event', related_name='custom_user_participants') 
-    # zipcode = models.CharField(
-    #     max_length=9,
-    #     validators=[
-    #         RegexValidator(
-    #             regex=r'^\d{5}(\d{4})?$',
-    #             message='Zip code must be either 5 or 9 digits.',
-    #             code='invalid_zip_code'
-    #         )
-    #     ]
-    # )
-
-    def __str__(self) -> str:
-        return self.fullname
+    def __str__(self):
+        return f'{self.user.username} Profile'
 
 class Event(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=200)
     description = models.TextField()
-    address = models.CharField(max_length=255)
+    address = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    zipcode = models.IntegerField()
+    zipcode = models.CharField(max_length=10)
     date = models.DateField()
     time = models.TimeField()
-    max_volunteers = models.IntegerField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_events")  # Changed related_name
-    participants = models.ManyToManyField(User, related_name="participating_events")  # Changed related_name
-    required_skills = models.ManyToManyField("Skill", blank=True)
-    fields = models.ManyToManyField("Field", blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    max_volunteers = models.IntegerField(default=50)
+    available_slots = models.IntegerField(default=50)
+    skills_needed = models.TextField(default="na") 
+    fields = models.TextField(default="na")  
+    participants = models.ManyToManyField(UserProfile, blank=True, related_name='events')
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
-
-
-class Field(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self) -> str:
-        return self.name
-
-class Skill(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self) -> str:
-        return self.name
-
