@@ -7,7 +7,8 @@ from django.core.validators import RegexValidator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["id", "username", "password"]
+        # fields = "__all__"
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -40,7 +41,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       return value
 
     def create(self, validated_data):
-      validated_data.pop('password2', None)  # Remove confirm password from validated data
       user = User.objects.create_user(
           username=validated_data['username'],
           password=validated_data['password']
@@ -49,22 +49,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    first_name = serializers.CharField(max_length=100)
-    last_name = serializers.CharField(max_length=100)
-    first_name = serializers.CharField(max_length=100)
-    last_name = serializers.CharField(max_length=100)
-    email = serializers.CharField(max_length=100)
-    skills = serializers.CharField(max_length=100) 
-    interested_fields = serializers.CharField(max_length=100) 
-    zipcode = serializers.CharField(max_length=10)
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'first_name', 'last_name', 'email', 'skills', 'interested_fields', 'zipcode']
-
-    # def create(self, validated_data):
-    #     user = self.context['request'].user
-    #     profile = UserProfile.objects.create(user=user, **validated_data)
-    #     return profile
 
 class EventSerializer(serializers.ModelSerializer):
     participants = UserProfileSerializer(many=True, read_only=True)
