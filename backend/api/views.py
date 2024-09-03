@@ -31,43 +31,34 @@ def view_all_user(request):
   serializer = UserProfileSerializer(users, many= True)
   return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
-
-#admin get  and delete user
+#admin get and delete user
 @api_view(["GET", "DELETE"])
 @permission_classes([IsAdminUser])
-def user_detail(request, pk):
-  user  = get_object_or_404(User, pk=pk)
+def user_detail(request, user_id):
+  user  = get_object_or_404(User, pk=user_id)
   if request.method == "GET":
     serializer = UserProfileSerializer(user.user_profile)
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+    
   if request.method == "DELETE":
     user.delete()
     return Response({"message": "user deleted"}, status=status.HTTP_202_ACCEPTED)
 
+
 @api_view(['GET', "POST", 'PATCH'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-  try:
-    user = request.user  
-  except UserProfile.DoesNotExist:
-    return Response({'error': 'User profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-
+  user = get_object_or_404(User, pk = request.user.id) 
+  
+  #get profile
   if request.method == 'GET':
-    profile = UserProfile.objects.get(user = user)
-    serializer = UserProfileSerializer(profile)
+    # serializer = UserSerializer(user)
+    serializer = UserProfileSerializer(user.user_profile)
     return Response(serializer.data)
-
-  elif request.method == 'POST':
-    serializer = UserProfileSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(user=user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+  
+  #update profile
   elif request.method == 'PATCH':
-    serializer = UserProfileSerializer(user.profile, data=request.data, partial=True)
+    serializer = UserProfileSerializer(user.user_profile, data=request.data, partial=True)
     if serializer.is_valid(): 
       serializer.save()
       return Response(serializer.data)
@@ -93,8 +84,8 @@ def create_event(request):
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([IsAdminUser])
-def event_detail(request, pk):
-  event = get_object_or_404(Event, pk=pk)
+def event_detail(request, event_detail):
+  event = get_object_or_404(Event, pk=event_detail)
 
   if request.method == 'GET':
     serializer = EventSerializer(event)
@@ -118,9 +109,9 @@ def event_detail(request, pk):
     event.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['POST', 'DELETE'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def participate_event(request, event_id):
+def join_event(request, event_id):
   event = get_object_or_404(Event, id=event_id)
   profile = request.user.userprofile
 
@@ -131,8 +122,13 @@ def participate_event(request, event_id):
       event.save()
       return Response({'status': 'participated'}, status=status.HTTP_200_OK)
     return Response({'error': 'Unable to participate'}, status=status.HTTP_400_BAD_REQUEST)
-
-  elif request.method == 'DELETE':
+  
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def leave_event(request, event_id):
+  event = get_object_or_404(Event, id=event_id)
+  profile = request.user.userprofile
+  if request.method == 'POST':
     if profile in event.participants.all():
       event.participants.remove(profile)
       event.available_slots += 1
