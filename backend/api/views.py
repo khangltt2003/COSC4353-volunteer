@@ -84,20 +84,14 @@ def create_event(request):
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 @permission_classes([IsAdminUser])
-def event_detail(request, event_detail):
-  event = get_object_or_404(Event, pk=event_detail)
-
+def event_detail(request, event_id):
+  event = get_object_or_404(Event, pk=event_id)
+  #view event
   if request.method == 'GET':
     serializer = EventSerializer(event)
     return Response(serializer.data)
 
-  elif request.method == 'PUT':
-    serializer = EventSerializer(event, data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+  #update event
   elif request.method == 'PATCH':
     serializer = EventSerializer(event, data=request.data, partial=True)
     if serializer.is_valid():
@@ -105,10 +99,12 @@ def event_detail(request, event_detail):
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+  #delete event
   elif request.method == 'DELETE':
     event.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+#join event
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def join_event(request, event_id):
@@ -122,7 +118,8 @@ def join_event(request, event_id):
       event.save()
       return Response({'status': 'participated'}, status=status.HTTP_200_OK)
     return Response({'error': 'Unable to participate'}, status=status.HTTP_400_BAD_REQUEST)
-  
+
+#leave event
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def leave_event(request, event_id):
