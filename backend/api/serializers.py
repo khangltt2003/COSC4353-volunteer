@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import UserProfile, Event
+from .models import *
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import RegexValidator
 
@@ -10,6 +10,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "password"]
         # fields = "__all__"
 
+class SkillSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Skill
+    fields = '__all__'
+
+class EventSerializer(serializers.ModelSerializer):
+    skills_needed = SkillSerializer(many=True)
+    class Meta:
+        model = Event
+        fields = "__all__"
+        
 class UserRegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         # validators=[
@@ -47,20 +58,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       )
       return user
 
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
+    events = EventSerializer(many=True)
+    skills = SkillSerializer(many=True)
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'first_name', 'last_name', 'email', 'skills', 'interested_fields', 'zipcode']
+        fields = '__all__'
 
-class EventSerializer(serializers.ModelSerializer):
-    participants = UserProfileSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = Event
-        fields = [
-            'id', 'title', 'description', 'address', 'city', 'state', 'zipcode', 
-            'date', 'time', 'max_volunteers', 'available_slots', 'skills_needed', 
-            'fields', 'participants'
-        ]
-    
