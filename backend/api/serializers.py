@@ -63,3 +63,4 @@ class EventSerializer(serializers.ModelSerializer):
             'date', 'time', 'max_volunteers', 'available_slots', 'skills_needed', 
             'fields', 'participants'
         ]
+    
