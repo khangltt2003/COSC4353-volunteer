@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
-import LoginImg from '../assets/login2.jpg';
+import LoginImg from '../assets/loginmed.jpg';
 import LogoImg from '../assets/Logo.jpg';
 import {BiUser} from 'react-icons/bi';
 import {AiFillLock} from 'react-icons/ai';
@@ -17,7 +17,7 @@ export default function Login2() {
     const handleSubmit = (e) => {
       e.preventDefault();
   
-      if (username === 'user' && password === 'pass') {
+      if (username === 'admin' && password === 'pass') {
         setError('');
         alert('Login successful!');
       } else {
@@ -31,13 +31,13 @@ export default function Login2() {
       <Link to="/Homepage">
         <button className="absolute top-4 left-4 z-10 hover:shadow-lg transition-transform duration-300 rounded-full hover:scale-110">
           <div className="absolute inset-0 flex justify-center items-center">
-            <div className="bg-main rounded-full blur-md shadow-lg w-24 h-24" />
+            <div className="bg-cyan-800 rounded-full blur-lg shadow-lg w-24 h-24" />
           </div>
           <img className=" relative w-24 h-24 rounded-full object-cover" src={LogoImg} alt="Logo" />
         </button>
       </Link>
         <div className="absolute inset-0 flex justify-center items-center">
-          <div className="bg-main rounded-lg blur-md shadow-lg w-full max-w-[505px] h-full max-h-[705px]" />
+          <div className="bg-cyan-700 rounded-lg blur-lg shadow-xl w-full max-w-[505px] h-full max-h-[705px]" />
         </div>
         <div className='relative flex justify-center items-center h-full'>
         <form className='form-large-text max-w-[500px] w-full max-h-[700px] h-full mx-auto bg-white p-6 rounded-lg' onSubmit={handleSubmit}>

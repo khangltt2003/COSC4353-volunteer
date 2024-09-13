@@ -9,8 +9,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (username === 'user' && password === 'pass') {
+    if (username === 'asd' && password === 'pass') {
       setError('');
       alert('Login successful!');
     } else {
