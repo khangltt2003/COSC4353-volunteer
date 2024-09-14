@@ -6,7 +6,7 @@ export default function Homepage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken') || sessionStorage.getItem('userToken');
     setIsLoggedIn(!!token);
   }, [navigate]); // Ensure this effect runs when navigating
 

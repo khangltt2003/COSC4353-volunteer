@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoginImg from '../assets/loginmed.jpg';
 import LogoImg from '../assets/Logo.jpg';
 import { BiUser } from 'react-icons/bi';
-import { AiFillLock } from 'react-icons/ai';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 
 export default function Login2() {
@@ -16,11 +15,11 @@ export default function Login2() {
     const navigate = useNavigate();
 
     useEffect(() => {
-      // Check if the user is logged in
+
       const token = localStorage.getItem('userToken') || sessionStorage.getItem('userToken');
       if (token) {
-        // Redirect to Homepage if already logged in
-        navigate('/Homepage');
+
+        navigate('/');
       }
     }, [navigate]);
 
@@ -47,7 +46,7 @@ export default function Login2() {
               localStorage.removeItem('userToken'); // Ensure localStorage is cleared
           }
 
-            navigate('/Homepage');
+            navigate('/');
         } else {
             setError('Incorrect username or password');
         }
@@ -56,7 +55,7 @@ export default function Login2() {
     return (
         <div className="relative w-full h-screen bg-[#4a5568]">
             <img className="absolute w-full h-full object-cover mix-blend-overlay" src={LoginImg} alt="Login" />
-            <Link to="/Homepage">
+            <Link to="/">
                 <button className="absolute top-4 left-4 z-10 hover:shadow-lg transition-transform duration-300 rounded-full hover:scale-110">
                     <div className="absolute inset-0 flex justify-center items-center">
                         <div className="bg-cyan-800 rounded-full blur-lg shadow-lg w-24 h-24" />
