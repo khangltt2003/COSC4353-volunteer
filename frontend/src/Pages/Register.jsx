@@ -69,7 +69,7 @@ export default function Login2() {
                 <div className='relative mb-2'>
                     <input
                         className='w-full border p-2 rounded-lg'
-                        type={visible ? 'text' :'cmpassword'}
+                        type={visible? 'text':'password'}
                         value={cmpassword}
                         onChange={(e) => setCmPassword(e.target.value)}
                         placeholder='Re-enter your password'
