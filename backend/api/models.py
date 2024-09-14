@@ -35,7 +35,7 @@ class Event(models.Model):
     description = models.TextField(blank=True)
     address = models.CharField(max_length=200, blank=True)
     city = models.CharField(max_length=100, blank=True)
-    # state = models.CharField(max_length=2, choices=STATE_CHOICES)
+    state = models.CharField(max_length=2, choices=STATE_CHOICES, blank=True)
     zipcode = models.CharField(max_length=9, null=True, validators=[
       RegexValidator(
                 regex=r'^\d{5}(\d{4})?$',
