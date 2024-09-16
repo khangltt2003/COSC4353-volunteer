@@ -4,6 +4,7 @@ import Login from './Pages/Login';
 import Login2 from './Pages/Login2';
 import Register from './Pages/Register';
 import Homepage from './Pages/Homepage';
+import Profile from './Pages/Profile';
 import Navbar from './components/Navbar';
 import './styles/globals.css';
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/loginpage" element={<Login2 />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       </div>
     </Router>

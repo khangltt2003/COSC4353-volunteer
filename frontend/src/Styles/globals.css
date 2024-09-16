@@ -1,3 +1,10 @@
 .form-large-text {
     @apply text-xl; /* Apply the desired Tailwind text size utility class */
   }
+
+  .small-checklist  {
+    font-size: 0.85rem; /* Adjusts the font size */
+    width: 90%; /* Adjusts the width */
+    max-width: 300px; /* Adjusts the maximum width */
+    margin: 0 auto; /* Centers the checklist if needed */
+  }

@@ -23,7 +23,7 @@ export default function Navbar() {
     localStorage.removeItem('userToken');
     sessionStorage.removeItem('userToken');
     setIsLoggedIn(false);
-    navigate('/loginpage'); // Redirect to login page after logout
+    navigate('/'); // Redirect to login page after logout
   };
 
   return (

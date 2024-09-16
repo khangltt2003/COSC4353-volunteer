@@ -4,6 +4,8 @@ import LoginImg from '../assets/loginmed.jpg';
 import LogoImg from '../assets/Logo.jpg';
 import { BiUser } from 'react-icons/bi';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login2() {
     const [username, setUsername] = useState('');
@@ -33,7 +35,7 @@ export default function Login2() {
 
         if (username === 'admin' && password === 'pass') {
             setError('');
-            alert('Login successful!');
+            toast.success('Login successful!');
 
             // Fake token
             const mockToken = 'mock-token-123';
@@ -46,9 +48,10 @@ export default function Login2() {
               localStorage.removeItem('userToken'); // Ensure localStorage is cleared
           }
 
-            navigate('/');
+          setTimeout(() => navigate('/'), 1500);
         } else {
             setError('Incorrect username or password');
+            toast.error('Incorrect username or password');
         }
     };
 
@@ -117,6 +120,7 @@ export default function Login2() {
                     </p>
                 </form>
             </div>
+            <ToastContainer/>
         </div>
     )
 }
