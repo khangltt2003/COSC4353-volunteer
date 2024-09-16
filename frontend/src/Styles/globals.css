@@ -1,3 +1,3 @@
 .form-large-text {
-    @apply text-xl; /* Apply the desired Tailwind text size utility class */
-  }
+  @apply text-xl; /* Apply the desired Tailwind text size utility class */
+}
