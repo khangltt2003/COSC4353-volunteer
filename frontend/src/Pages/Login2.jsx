@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginmed.jpg";
 import LogoImg from "../assets/Logo.jpg";
@@ -6,7 +6,7 @@ import { BiUser } from "react-icons/bi";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 export default function Login2() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -28,7 +28,7 @@ export default function Login2() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (username === "admin" && password === "pass") {
+    if (email === "admin" && password === "pass") {
       setError("");
       alert("Login successful!");
 
@@ -65,20 +65,20 @@ export default function Login2() {
       </div> */}
       <div className="relative flex justify-center items-center min-h-screen">
         <form
-          className="form-large-text max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-lg"
+          className="form-large-text max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg  shadow-slate-800 shadow-2xl"
           onSubmit={handleSubmit}
         >
           <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
 
           <div className="relative mb-2">
-            <label className="flex flex-col py-2 text-base sm:text-lg">Username</label>
+            <label className="flex flex-col py-2 text-base sm:text-lg">Email</label>
             <div className="relative">
               <input
                 className="w-full border p-2 rounded-lg text-sm sm:text-base"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
               />
               <BiUser className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-600" />
             </div>

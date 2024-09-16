@@ -5,7 +5,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const hideNavbarRoutes = ["/login", "/register"];
-  if (hideNavbarRoutes.includes(location.pathname)) {
+  if (hideNavbarRoutes.includes(location.pathname.toLocaleLowerCase())) {
     return null;
   }
   const [isLoggedIn, setIsLoggedIn] = useState(false);
