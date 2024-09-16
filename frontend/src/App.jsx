@@ -8,11 +8,11 @@ import "./styles/globals.css";
 function App() {
   return (
     <Router>
+      <Navbar />
       <div>
-        <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/loginpage" element={<Login2 />} />
+          <Route path="/login" element={<Login2 />} />
           <Route path="/register" element={<Register />} />
         </Routes>
       </div>

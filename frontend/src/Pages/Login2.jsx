@@ -65,7 +65,7 @@ export default function Login2() {
       </div> */}
       <div className="relative flex justify-center items-center min-h-screen">
         <form
-          className="form-large-text max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[700px] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-lg"
+          className="form-large-text max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-lg"
           onSubmit={handleSubmit}
         >
           <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
