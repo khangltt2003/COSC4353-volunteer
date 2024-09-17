@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form-large-text {
+  @apply text-xl; /* Apply the desired Tailwind text size utility class */
+}

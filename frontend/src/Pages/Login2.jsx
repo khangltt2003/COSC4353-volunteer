@@ -1,16 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/loginmed.jpg";
 import LogoImg from "../assets/Logo.jpg";
 import { BiUser } from "react-icons/bi";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import AuthContext from "../../context/AuthContext";
 
 export default function Login2() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
+
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+
   const [rememberMe, setRememberMe] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -21,32 +27,42 @@ export default function Login2() {
     }
   }, [navigate]);
 
+  const handleChange = (e) => {
+    setError(null);
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+  };
+
   const handleCheckboxChange = () => {
     setRememberMe(!rememberMe);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (email === "admin" && password === "pass") {
-      setError("");
-      alert("Login successful!");
-
-      // Fake token
-      const mockToken = "mock-token-123";
-
-      if (rememberMe) {
-        localStorage.setItem("userToken", mockToken);
-        sessionStorage.removeItem("userToken"); // Ensure sessionStorage is cleared
-      } else {
-        sessionStorage.setItem("userToken", mockToken);
-        localStorage.removeItem("userToken"); // Ensure localStorage is cleared
-      }
-
-      navigate("/");
-    } else {
-      setError("Incorrect username or password");
+    const status = await login(loginData);
+    if (status != 200) {
+      setError("Incorrect email or password");
     }
+    navigate("/profile");
+    // if (email === "admin" && password === "pass") {
+    //   setError("");
+    //   alert("Login successful!");
+
+    //   // Fake token
+    //   const mockToken = "mock-token-123";
+
+    //   if (rememberMe) {
+    //     localStorage.setItem("userToken", mockToken);
+    //     sessionStorage.removeItem("userToken"); // Ensure sessionStorage is cleared
+    //   } else {
+    //     sessionStorage.setItem("userToken", mockToken);
+    //     localStorage.removeItem("userToken"); // Ensure localStorage is cleared
+    //   }
+
+    //   navigate("/");
+    // } else {
+    //   setError("Incorrect email or password");
+    // }
   };
 
   return (
@@ -71,13 +87,14 @@ export default function Login2() {
           <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
 
           <div className="relative mb-2">
-            <label className="flex flex-col py-2 text-base sm:text-lg">Email</label>
+            <label className="flex flex-col py-2 text-base ">Email</label>
             <div className="relative">
               <input
-                className="w-full border p-2 rounded-lg text-sm sm:text-base"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border p-2 rounded-lg "
+                type="text"
+                name="email"
+                value={loginData.email}
+                onChange={handleChange}
                 placeholder="Enter your email"
               />
               <BiUser className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-600" />
@@ -85,13 +102,14 @@ export default function Login2() {
           </div>
 
           <div className="relative mb-4">
-            <label className="flex flex-col py-2 text-base sm:text-lg">Password</label>
+            <label className="flex flex-col py-2 ">Password</label>
             <div className="relative mb-2">
               <input
-                className="w-full border p-2 rounded-lg text-sm sm:text-base"
+                className="w-full border p-2 rounded-lg  "
                 type={visible ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={loginData.password}
+                onChange={handleChange}
                 placeholder="Enter your password"
               />
               <div className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-600">
@@ -100,19 +118,19 @@ export default function Login2() {
             </div>
           </div>
 
-          <button className="border w-full mt-8 py-2 sm:py-3 rounded-lg bg-main hover:bg-cyan-500 text-white text-sm sm:text-base" type="submit">
+          <button className="border w-full my-3 py-2 sm:py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
             Login
           </button>
 
-          {error && <p className="text-red-500 text-center text-sm sm:text-base">{error}</p>}
+          {error && <p className="text-red-500 text-center ">{error}</p>}
 
           <div className="flex justify-between mt-5">
-            <p className="text-sm sm:text-base">
+            <p className="">
               <input type="checkbox" checked={rememberMe} onChange={handleCheckboxChange} /> Remember Me
             </p>
           </div>
 
-          <p className="text-center mt-6 sm:mt-10 text-sm sm:text-base">
+          <p className="text-center mt-6 sm:mt-10">
             <span>
               Not a Member?{" "}
               <Link to="/register" className="text-main hover:text-blue-400">

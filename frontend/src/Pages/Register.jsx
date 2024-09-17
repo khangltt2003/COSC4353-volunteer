@@ -42,7 +42,6 @@ export default function Login2() {
       setError("Password does not match.");
       return;
     }
-
     try {
       const response = await axios({
         method: "POST",
@@ -53,14 +52,12 @@ export default function Login2() {
           password2: data.password2,
         },
       });
-      if (response.status === 201) {
-        setMessage("Account created successfully.");
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
-      }
+      setMessage("Account created successfully.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (err) {
-      setError(err.response.data[0]);
+      setError("Email is already used.");
     }
   };
   return (
@@ -129,12 +126,12 @@ export default function Login2() {
               </div>
             </div>
           </div>
-          <button className="border w-full my-5 py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
+          <button className="border w-full my-3 py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
             Sign Up
           </button>
           {error && <p className="text-red-500 text-center">{error}</p>}
           {message && <p className="text-green-500 text-center">{message}</p>}
-          <p className="text-center mt-10">
+          <p className="text-center mt-5">
             <span>
               Already a Member?{" "}
               <Link to="/login" className="text-main hover:text-blue-400">
