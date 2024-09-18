@@ -1,0 +1,5 @@
+DATABASE_NAME = volunteer-app
+DATABASE_USER = postgres
+DATABASE_PASSWORD = H6SukCIlJ2IBespL
+DATABASE_HOST = flashily-divine-salamander.data-1.use1.tembo.io
+DATABASE_POST  = 5432

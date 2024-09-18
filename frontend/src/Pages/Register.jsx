@@ -26,8 +26,8 @@ export default function Register() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "username") {
-      const isValid = /^[a-zA-Z0-9]+$/.test(value) && value.length >= 8 && value.length <= 50;
+    if (name === "Email") {
+      const isValid = /^[a-zA-Z0-9]+@+.{2}$/.test(value);
       setIsUsernameValid(isValid);
       
     }
@@ -83,7 +83,7 @@ export default function Register() {
                       name='username'
                       value={formData.username}
                       onChange={handleChange}
-                      placeholder='Enter your username'
+                      placeholder='Enter your Email'
                       />
                   {!isUsernameValid && (
                     <BiUser className='absolute top-1/4 right-4 transform-translate-y-1/2 text-gray-600' />
