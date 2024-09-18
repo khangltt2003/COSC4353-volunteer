@@ -8,6 +8,21 @@ from django.dispatch import receiver
 from .models import UserProfile, Event
 from .serializers import UserSerializer, UserProfileSerializer, EventSerializer, UserRegistrationSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['is_staff'] = user.is_staff
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 #create a profile whenever a user is created
 @receiver(post_save, sender=User)

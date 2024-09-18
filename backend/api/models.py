@@ -52,7 +52,6 @@ class Event(models.Model):
         return self.name
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile", null=True)
-    email = models.CharField(max_length=100, blank=True )
     fullname = models.CharField(max_length=100, blank=True )
     address1 = models.CharField(max_length=100, blank=True )
     address2 = models.CharField( max_length=100, blank=True )
