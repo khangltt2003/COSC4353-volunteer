@@ -1,7 +1,5 @@
 import React,{useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import PasswordChecklist from 'react-password-checklist';
 import LoginImg from '../assets/loginmed.jpg';
 import LogoImg from '../assets/Logo.jpg';
@@ -42,17 +40,13 @@ export default function Register() {
     try {
 
       if (formData.password === formData.cmpassword && isUsernameValid && isPasswordValid) {
-
-        toast.success('Registration is successful!\n Please log in.');
-        console.log('Registration is successful!');
         setTimeout(() => navigate('/loginpage'), 2000);
       } else {
 
-        toast.error('Error occurred during registration!');
+        setError('Error occurred during registration!');
       }
     } catch (err) {
 
-      toast.error('Error occurred during registration!');
       setError('Error occurred during registration!');
     }
   };
@@ -157,7 +151,6 @@ export default function Register() {
           </p>
       </form>
     </div>
-    <ToastContainer />
   </div>
 )
 }
