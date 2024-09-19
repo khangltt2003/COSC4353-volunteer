@@ -189,9 +189,10 @@ const EventForm = () => {
                   onChange={handleDropdownUrgent(setUR, setUrgentError)}
                   className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${urgentError ? 'border-red-500' : 'border-gray-600'}`}
                 >
-                <option value="" disabled>N/A *</option>
-                <option value="option1">Urgency</option>
-                <option value="option2">Non-urgent</option>
+                <option value="" disabled>Urgent *</option>
+                <option value="option1">Low</option>
+                <option value="option2">Medium</option>
+                <option value="option2">High</option>
                 </select>
               </div>
             </div>
