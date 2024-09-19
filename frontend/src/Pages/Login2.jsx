@@ -39,11 +39,21 @@ export default function Login2() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     const status = await login(loginData);
-    if (status != 200) {
+    
+    if (status === 200) {
+      if (rememberMe) {
+        localStorage.setItem("userToken", loginData.email); 
+        sessionStorage.removeItem("userToken"); 
+      } else {
+        sessionStorage.setItem("userToken", loginData.email);
+        localStorage.removeItem("userToken"); 
+      }
+      navigate("/profile");
+    } else {
       setError("Incorrect email or password");
     }
-    navigate("/profile");
     // if (email === "admin" && password === "pass") {
     //   setError("");
     //   alert("Login successful!");
