@@ -7,7 +7,7 @@ import { BiUser } from 'react-icons/bi';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import axios from "axios";
 
-export default function Login2() {
+export default function Register() {
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
@@ -146,15 +146,12 @@ export default function Login2() {
           {/* Password Checklist */}
           {data.password && (
             <PasswordChecklist
-              className="password-checklist small-checklist"
-              rules={["minLength", "specialChar", "number", "capital", "match"]}
-              minLength={8}
-              value={data.password}
-              valueAgain={data.password2}
-              onChange={(isValid) => {
-                setIsPasswordValid(isValid);
-              }}
-            />
+            rules={["minLength", "specialChar", "number", "capital", "match"]}
+            minLength={8}
+            value={data.password}
+            valueAgain={data.password2}
+            onChange={(isValid) => setIsPasswordValid(isValid)}
+          />
           )}
 
           <button className="border w-full my-3 py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
