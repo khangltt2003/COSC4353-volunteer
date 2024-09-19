@@ -3,9 +3,10 @@ import AuthContext from "../../context/AuthContext";
 import axios from "axios";
 
 const Profile = () => {
-  const { authTokens } = useContext(AuthContext);
-  const [user, setUser] = useState(null);
+  const { authTokens, user } = useContext(AuthContext);
+  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  // const { profile, profileLoaded } = ProfileHook();
 
   useEffect(() => {
     const getProfile = async () => {
@@ -16,14 +17,14 @@ const Profile = () => {
           Authorization: `Bearer  ${authTokens.access}`,
         },
       });
-      setUser(response.data);
+      setProfile(response.data);
       setIsLoading(false);
       console.log(user);
     };
     getProfile();
   }, []);
   if (isLoading) return <div>Loading...</div>;
-  return <div>Profile: {JSON.stringify(user)}</div>;
+  return <div>Profile: {JSON.stringify(profile)}</div>;
 };
 
 export default Profile;

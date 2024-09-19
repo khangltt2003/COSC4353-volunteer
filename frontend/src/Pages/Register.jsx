@@ -7,6 +7,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PasswordChecklist from "react-password-checklist";
 
 export default function Login2() {
   const navigate = useNavigate();
@@ -76,12 +77,12 @@ export default function Login2() {
       </div> */}
       <div className="relative flex justify-center items-center min-h-screen ">
         <form
-          className="form-large-text  max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%]  sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-slate-800 shadow-2xl"
+          className="form-large-text  lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%]  sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-slate-800 shadow-2xl"
           onSubmit={handleSubmit}
         >
-          <h1 className=" text-5xl text-main font-bold text-center mb-4 mt-8 ">TALKConnect</h1>
+          <h1 className=" text-5xl text-main font-bold text-center mb-3 ">TALKConnect</h1>
           <div className="relative mb-2">
-            <label className="flex flex-col py-2 sm:text-lg ">Email</label>
+            <label className="flex flex-col sm:text-lg ">Email</label>
             <div className="relative">
               <input
                 className="w-full border p-2 rounded-lg"
@@ -94,9 +95,9 @@ export default function Login2() {
               <BiUser className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-600" />
             </div>
           </div>
-          <div className="relative mb-">
-            <label className="flex flex-col py-2 sm:text-lg">Password</label>
-            <div className="relative mb-2">
+          <div className="relative mb-2">
+            <label className="flex flex-col sm:text-lg">Password</label>
+            <div className="relative ">
               <input
                 className="w-full border p-2 rounded-lg"
                 type={visible ? "text" : "password"}
@@ -110,9 +111,9 @@ export default function Login2() {
               </div>
             </div>
           </div>
-          <div className="relative mb-4">
-            <label className="flex flex-col py-2 sm:text-lg"> Confirm Password</label>
-            <div className="relative mb-2">
+          <div className="relative mb-2">
+            <label className="flex flex-col  sm:text-lg"> Confirm Password</label>
+            <div className="relative">
               <input
                 className="w-full border p-2 rounded-lg"
                 type={visible ? "text" : "password"}
@@ -129,6 +130,22 @@ export default function Login2() {
           <button className="border w-full my-3 py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
             Sign Up
           </button>
+          {data.password.length > 0 && (
+            <PasswordChecklist
+              className="text-sm"
+              rules={["minLength", "specialChar", "number", "capital", "match"]}
+              minLength={5}
+              value={data.password}
+              valueAgain={data.password2}
+              messages={{
+                minLength: "Password must be more than 8 characters",
+                specialChar: "Password must contain a special characters",
+                number: "Password must contain a number",
+                capital: "Password must contain a capitalize character",
+                match: "Password does not match",
+              }}
+            />
+          )}
           {error && <p className="text-red-500 text-center">{error}</p>}
           {message && <p className="text-green-500 text-center">{message}</p>}
           <p className="text-center mt-5">

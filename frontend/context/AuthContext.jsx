@@ -6,8 +6,8 @@ const AuthContext = createContext({});
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const [authTokens, setAuthTokens] = useState(null);
-  const [user, setUser] = useState(null);
+  const [authTokens, setAuthTokens] = useState(() => (localStorage.getItem("AuthTokens") ? JSON.parse(localStorage.getItem("AuthTokens")) : null));
+  const [user, setUser] = useState(() => (localStorage.getItem("AuthTokens") ? jwtDecode(localStorage.getItem("AuthTokens")) : null));
 
   const login = async (data) => {
     try {
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       const accessToken = response.data.access;
       setAuthTokens(response.data);
       setUser(jwtDecode(accessToken));
-      localStorage.setItem("AuthTokens", JSON.stringify(authTokens));
+      localStorage.setItem("AuthTokens", JSON.stringify(response.data));
       return response.status;
     } catch (err) {
       return err.status;
