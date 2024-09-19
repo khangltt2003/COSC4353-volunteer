@@ -9,10 +9,14 @@ import HomePage from './Pages/Homepage';
 function App() {
   return (
     <Router>
+      <div>
+         <Navbar /> 
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/loginpage" element={<Login2 />} />
+        {/*<Route path="/Register" element={<Register />} />*/}
       </Routes>
+      </div>
     </Router>
   )
 
