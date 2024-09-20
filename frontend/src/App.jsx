@@ -29,7 +29,7 @@ function App() {
           <Route path="/history" element={<History />} />
           <Route path="/volunteer" element={<VolunteerMatch />} />
           <Route path="/match" element={<MatchSave />} />
-          <Route path="/event" element={<EventForm />} />
+          <Route path="/createevent" element={<EventForm />} />
           <Route path="/save" element={<Save />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/submit" element={<Thankyou />} />
