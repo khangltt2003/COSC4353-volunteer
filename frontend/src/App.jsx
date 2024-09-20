@@ -4,13 +4,13 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import ContactUs from './components/ContactUs'
+import ContactUs from './Pages/ContactUs'
 import Thankyou from './components/Thankyou';
-import EventForm from './components/EventForm';
+import EventForm from './Pages/EventForm';
 import Save from './components/Save';
-import VolunteerMatch from './components/VolunteerMatch';
+import VolunteerMatch from './Pages/VolunteerMatch';
 import MatchSave from './components/MatchSave';
-import History from './components/History';
+import History from './Pages/History';
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
