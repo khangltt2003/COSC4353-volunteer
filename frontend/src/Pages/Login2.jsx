@@ -76,12 +76,12 @@ export default function Login2() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-[#4a5568]">
+    <div className="relative w-full h-screen bg-teal-700">
       <img className="absolute w-full h-full object-cover mix-blend-overlay" src={LoginImg} alt="Login" />
       <Link to="/">
         <button className="absolute top-4 left-4 z-10 hover:shadow-lg transition-transform duration-300 rounded-full hover:scale-110">
           <div className="absolute inset-0 flex justify-center items-center">
-            <div className="bg-cyan-800 rounded-full blur-lg shadow-lg w-24 h-24" />
+            <div className="bg-teal-600 rounded-full blur-lg shadow-lg w-24 h-24" />
           </div>
           <img className="relative w-24 h-24 rounded-full object-cover" src={LogoImg} alt="Logo" />
         </button>
@@ -91,7 +91,7 @@ export default function Login2() {
       </div> */}
       <div className="relative flex justify-center items-center min-h-screen">
         <form
-          className="form-large-text max-w-[90%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg  shadow-slate-800 shadow-2xl"
+          className="form-large-text max-w-[95%] lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%] sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg  shadow-slate-800 shadow-2xl"
           onSubmit={handleSubmit}
         >
           <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
