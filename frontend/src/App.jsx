@@ -1,17 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ContactUs from "./Pages/ContactUs";
-import Thankyou from "./Pages/Thankyou";
-import EventForm from "./Pages/EventForm";
-import Save from "./Pages/Save";
-import VolunteerMatch from "./Pages/VolunteerMatch";
-import MatchSave from "./Pages/MatchSave";
-import History from "./Pages/History";
+import ContactUs from "./pages/ContactUs";
+import Thankyou from "./pages/Thankyou";
+import EventForm from "./pages/EventForm";
+import Save from "./pages/Save";
+import VolunteerMatch from "./pages/VolunteerMatch";
+import MatchSave from "./pages/MatchSave";
+import History from "./pages/History";
 import Navbar from "./components/Navbar";
-import Login from "./Pages/Login";
-import HomePage from "./Pages/Homepage";
-import NotificationPage from "./Pages/NotificationPage";
-import Register from "./Pages/Register";
+import Login from "./pages/Login";
+import HomePage from "./pages/Homepage";
+import NotificationPage from "./pages/NotificationPage";
+import Register from "./pages/Register";
 import "./App.css";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
 
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/history" element={<History />} />

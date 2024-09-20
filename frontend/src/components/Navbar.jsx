@@ -34,8 +34,8 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/recruit" className="text-teal-600 hover:text-gray-300">
-              Recruit
+            <Link to="/profile" className="text-teal-600 hover:text-gray-300">
+              Profile
             </Link>
           </li>
           <li>

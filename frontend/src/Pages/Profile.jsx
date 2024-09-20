@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import AuthContext from "../../context/AuthContext";
+// import AuthContext from "../../context/AuthContext";
 import UserImg from "../assets/User.png";
 import axios from "axios";
 
@@ -59,56 +59,56 @@ const states = [
 ];
 
 const Profile = () => {
-  const { authTokens } = useContext(AuthContext);
+  // const { authTokens } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [addressOne, setAddressOne] = useState("");
-  const [addressTwo, setAddressTwo] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
+  const [fullName, setFullName] = useState("asdf");
+  const [addressOne, setAddressOne] = useState("asdf");
+  const [addressTwo, setAddressTwo] = useState("asdf");
+  const [city, setCity] = useState("asdf");
+  const [state, setState] = useState("asdf");
+  const [zipCode, setZipCode] = useState("asdf");
   const [preferences, setPreferences] = useState([]);
   const [availability, setAvailability] = useState([]);
-  const [email, setEmail] = useState("");
-  const [bio, setBio] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [email, setEmail] = useState("asdf");
+  const [bio, setBio] = useState("asdf");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(["09-25-2024", "02-15-2024"]);
 
-  useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const response = await axios({
-          method: "GET",
-          url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
-          headers: {
-            Authorization: `Bearer ${authTokens.access}`,
-          },
-        });
-        setProfile(response.data);
-        setProfileLoaded(true);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-    getProfile();
-  }, [authTokens.access]);
+  // useEffect(() => {
+  //   const getProfile = async () => {
+  //     try {
+  //       const response = await axios({
+  //         method: "GET",
+  //         url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
+  //         headers: {
+  //           Authorization: `Bearer ${authTokens.access}`,
+  //         },
+  //       });
+  //       setProfile(response.data);
+  //       setProfileLoaded(true);
+  //     } catch (error) {
+  //       console.error("Error fetching profile:", error);
+  //     }
+  //   };
+  //   getProfile();
+  // }, [authTokens.access]);
 
-  useEffect(() => {
-    if (profileLoaded && profile) {
-      setFullName(profile.fullname || "");
-      setAddressOne(profile.address1 || "");
-      setAddressTwo(profile.address2 || "");
-      setCity(profile.city || "");
-      setState(profile.state || "");
-      setZipCode(profile.zipcode || "");
-      setPreferences(profile.preference || []);
-      setAvailability(profile.availability || []);
-      setEmail(profile.user.email || "");
-      setBio(profile.bio || "");
-      setIsLoading(false);
-    }
-  }, [profile, profileLoaded]);
+  // useEffect(() => {
+  //   if (profileLoaded && profile) {
+  //     setFullName(profile.fullname || "");
+  //     setAddressOne(profile.address1 || "");
+  //     setAddressTwo(profile.address2 || "");
+  //     setCity(profile.city || "");
+  //     setState(profile.state || "");
+  //     setZipCode(profile.zipcode || "");
+  //     setPreferences(profile.preference || []);
+  //     setAvailability(profile.availability || []);
+  //     setEmail(profile.user.email || "");
+  //     setBio(profile.bio || "");
+  //     setIsLoading(false);
+  //   }
+  // }, [profile, profileLoaded]);
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value);
@@ -121,34 +121,34 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios({
-        method: "PUT",
-        url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
-        headers: {
-          Authorization: `Bearer ${authTokens.access}`,
-          "Content-Type": "application/json",
-        },
-        data: {
-          fullname: fullName,
-          address1: addressOne,
-          address2: addressTwo,
-          city: city,
-          state: state,
-          zipcode: zipCode,
-          preference: preferences,
-          availability: availability,
-          user: {
-            email: email,
-            bio: bio,
-          },
-        },
-      });
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error.response.data);
-      alert(`Failed to update profile: ${error.response.data.message || error.message}`);
-    }
+    //   try {
+    //     await axios({
+    //       method: "PUT",
+    //       url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
+    //       headers: {
+    //         Authorization: `Bearer ${authTokens.access}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //       data: {
+    //         fullname: fullName,
+    //         address1: addressOne,
+    //         address2: addressTwo,
+    //         city: city,
+    //         state: state,
+    //         zipcode: zipCode,
+    //         preference: preferences,
+    //         availability: availability,
+    //         user: {
+    //           email: email,
+    //           bio: bio,
+    //         },
+    //       },
+    //     });
+    //     alert("Profile updated successfully!");
+    //   } catch (error) {
+    //     console.error("Error updating profile:", error.response.data);
+    //     alert(`Failed to update profile: ${error.response.data.message || error.message}`);
+    //   }
   };
 
   const handleAddDate = () => {
@@ -170,7 +170,7 @@ const Profile = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <section className="bg-[#6E6E6E] h-screen flex items-center justify-center">
+    <section className="bg-[#6E6E6E] flex items-center justify-center">
       <div className="w-full max-w-[85%] bg-white max-h-[95%] h-full rounded-lg p-8 flex  shadow-teal-600 shadow-2xl">
         <div className="w-1/5 flex flex-col  items-center border-r border-gray-300 pr-8">
           <img src={UserImg} alt="Profile" className="w-48 h-48 rounded-full border-1 border-black mb-4 mt-6" />
