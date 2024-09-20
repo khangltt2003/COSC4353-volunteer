@@ -100,7 +100,7 @@ export default function Login2() {
             </div>
           </div>
 
-          <button className="border w-full my-3 py-2 sm:py-3 rounded-lg bg-main bg-cyan-500 text-white" type="submit">
+          <button className="border w-full my-3 py-2 sm:py-3 rounded-lg bg-main hover:bg-cyan-500 text-white" type="submit">
             Login
           </button>
 
@@ -115,7 +115,7 @@ export default function Login2() {
           <p className="text-center mt-6 sm:mt-10">
             <span>
               Not a Member?{" "}
-              <Link to="/register" className="text-main text-cyan-500">
+              <Link to="/register" className="text-main hover:text-blue-400">
                 Create an Account
               </Link>
             </span>

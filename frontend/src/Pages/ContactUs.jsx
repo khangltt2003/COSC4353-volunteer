@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const ContactUs = () => {
       <div className="grid grid-cols-1">
         <div className="flex flex-col items-center justify-center h-auto mx-auto p-6 rounded-lg bg-orange-200 mt-5 w-2/5">
           <div className="flex-grow flex items-center justify-center mb-4">
-            <img src="/logo.png" alt="Logo Image" className="w-1/4 h-auto" /> {/* Logo Image */}
+            <img src={logo} alt="Logo Image" className="w-1/4 h-auto" /> {/* Logo Image */}
           </div>
 
           <div className="space-y-4 w-full">
@@ -131,17 +132,6 @@ const ContactUs = () => {
               <p className="text-slate-50">Send Message</p>
             </button>
           </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center w-full h-full bg-[url('/bottom.png')] bg-cover bg-center pt-10">
-        <div className="flex justify-center items-center mb-4">
-          <img src="/logo.png" alt="Logo Image" className="w-32 h-auto" /> {/* Logo Image */}
-        </div>
-
-        <div className="flex flex-col items-center justify-center text-center">
-          <p className="pb-5 text-slate-950/75 text-3xl font-serif">TALKConnect</p>
-          <p className="font-light text-slate-950 text-xl mb-5">Email:</p>
         </div>
       </div>
     </div>
