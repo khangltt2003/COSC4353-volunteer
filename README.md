@@ -1,13 +1,23 @@
 ## Frontend Setup
 
 **Step 1: Navigate to the Frontend**  
-Open another terminal in Visual Studio Code. If you're currently in the backend, navigate to the frontend:
+Open another terminal in Visual Studio Code. If you're currently in the backend, navigate to the frontend by running:
 
+```bash
+cd frontend
+```
 **Step 2: Create Environment File**  
 Create a `.env` file inside the frontend folder. This file may include any necessary environment variables for the frontend.
 
-**Step 3: Start the Frontend Server**  
+**Step 3: Start the Frontend Server**
+Ensure all necessary packages are installed by running:
+```bash
+npm install
+```
 Run the frontend development server:
+```bash
+npm run dev/start
+```
 
 Open your browser and go to [http://localhost:5173](http://localhost:5173).
 
