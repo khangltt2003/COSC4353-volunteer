@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Event data
+// fake Event data
 const Dental1 = {
     event1: 'Dental Event 2022',
     role: '',
@@ -11,25 +11,6 @@ const Dental1 = {
     participate : '10:00am - 15:00pm',
 };
 
-const Dental2 = {
-    event1: 'Dental Event 2023',
-    role: '',
-    description: 'Dental Care for the elderly',
-    location: 'Sample Address',
-    date: 'Sep 2023',
-    urgent: 'Low',
-    participate: '12:00pm - 16:00pm',
-};
-
-const Dental3 = {
-    event1: 'Dental Event 2024',
-    role: '',
-    description: 'Dental Care for the elderly',
-    location: 'Sample Address',
-    date: 'Sep 2024',
-    urgent: 'High',
-    participate: '11:00am - 14:00pm',
-};
 
 const Profile = {
     name: 'Alice Johnson',
@@ -37,7 +18,7 @@ const Profile = {
     phone: '123-456-7890',
     username: 'alicejohnson',
     skill: 'Dental',
-    events: [Dental1, Dental2, Dental3], // Example event data array
+    events: [Dental1], // Example event data array, doing array cuz may add more events in the future
 };
 
 const History = () => {
@@ -48,7 +29,7 @@ const History = () => {
             </p>
             <div className="px-6 py-6 mt-[-2rem]">
                 <form className="flex flex-wrap gap-6">
-                    {/* First input section */}
+                    {/* Name section */}
                     <div className="flex-1 min-w-[200px]">
                         <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">
                             Volunteer Name
@@ -63,7 +44,7 @@ const History = () => {
                         />
                     </div>
                     
-                    {/* Second input section */}
+                    {/* Email section */}
                     <div className="flex-1 min-w-[200px]">
                         <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
                             Email
@@ -78,7 +59,7 @@ const History = () => {
                         />
                     </div>
 
-                    {/* Third input section */}
+                    {/* Phone Number section */}
                     <div className="flex-1 min-w-[200px]">
                         <label htmlFor="phone" className="block text-gray-700 font-semibold mb-2">
                             Phone Number
@@ -93,7 +74,7 @@ const History = () => {
                         />
                     </div>
 
-                    {/* Fourth input section */}
+                    {/* Username section */}
                     <div className="flex-1 min-w-[200px]">
                         <label htmlFor="username" className="block text-gray-700 font-semibold mb-2">
                             Username
@@ -108,7 +89,7 @@ const History = () => {
                         />
                     </div>
 
-                    {/* Fifth input section */}
+                    {/* Skill section */}
                     <div className="flex-1 min-w-[200px]">
                         <label htmlFor="skill" className="block text-gray-700 font-semibold mb-2">
                             Skill
@@ -129,12 +110,13 @@ const History = () => {
                             Event History
                         </label>
                         <div id="events" className="flex flex-col gap-10">
-                            {Profile.events.map((event, index) => (
+                            {Profile.events.map((event, index) => ( // map() go through each event in the array
+                            // go in the event object inside the profile
                                 <div key={index} className="flex flex-col">
                                     <label className="text-gray-600 font-medium">{event.event1}</label>
 
                                     <label className="text-gray-600 font-medium mb-2 text-left ml-2">Description </label>
-                                    <input
+                                    <input // description field
                                         type="text"
                                         name={`description${index}`}
                                         value={event.description}
@@ -142,7 +124,7 @@ const History = () => {
                                         className="w-full px-3 py-2 mt-2 font-light border rounded-lg shadow-sm focus:outline-none focus:border-sky-700"
                                     />
                                     <label className="text-gray-600 font-medium mb-2 mt-3 text-left ml-2">Address </label>
-                                     <input
+                                     <input // address field
                                         type="text"
                                         name={`location${index}`}
                                         value={event.location}
@@ -150,7 +132,7 @@ const History = () => {
                                         className="w-full px-3 py-2 mt-2 font-light border rounded-lg shadow-sm focus:outline-none focus:border-sky-700"
                                     />
                                     <label className="text-gray-600 font-medium mb-2 mt-3 text-left ml-2">Urgent </label>
-                                    <input
+                                    <input // urgent field
                                         type="text"
                                         name={`urgent${index}`}
                                         value={event.urgent}
@@ -158,7 +140,7 @@ const History = () => {
                                         className="w-full px-3 py-2 mt-2 font-light border rounded-lg shadow-sm focus:outline-none focus:border-sky-700"
                                     />
                                     <label className="text-gray-600 font-medium mb-2 mt-3 text-left ml-2">Date </label>
-                                    <input
+                                    <input // date field
                                         type="text"
                                         name={`date${index}`}
                                         value={event.date}
@@ -166,7 +148,7 @@ const History = () => {
                                         className="w-full px-3 py-2 mt-2 font-light border rounded-lg shadow-sm focus:outline-none focus:border-sky-700"
                                     />
                                     <label className="text-gray-600 font-medium mb-2 mt-3 text-left ml-2">Participation </label>
-                                    <input
+                                    <input // participate field
                                         type="text"
                                         name={`participate${index}`}
                                         value={event.participate}

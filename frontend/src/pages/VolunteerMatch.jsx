@@ -84,7 +84,7 @@ const VolunteerMatch = () => {
                                     value={selectedVolunteer}
                                     onChange={handleVolunteerChange}
                                     className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${error ? 'border-red-500' : 'border-gray-600'}`}
-                                >
+                                > {/* fake options for dropdown base on the number of volunteers */}
                                     <option value="" disabled>Select a Volunteer *</option>
                                     <option value="Volunteer 1">Volunteer 1</option>
                                     <option value="Volunteer 2">Volunteer 2</option>
@@ -109,9 +109,9 @@ const VolunteerMatch = () => {
                                     />
                                 </div>
 
-                                <div>
+                                <div> 
                                     <label htmlFor="event" className="block text-gray-700 font-semibold mb-2">
-                                        Matched Event
+                                        Matched Event {/* match event name base the fake skill*/}
                                     </label>
                                     <input
                                         type="text"
@@ -124,7 +124,7 @@ const VolunteerMatch = () => {
                                 </div>
                             </div>
                             <button 
-                                onClick={handleSubmit}
+                                onClick={handleSubmit} // negative to submit page if there is no error
                                 className="transition ease-in-out delay-500 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"
                             >
                                 <p className="text-slate-50">

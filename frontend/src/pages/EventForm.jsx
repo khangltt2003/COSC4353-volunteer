@@ -11,7 +11,6 @@ const EventForm = () => {
   const [area, setArea] = useState('');
   const [skill, setSkill] = useState('');
   const [urgency, setUR] = useState('');
-  const [date, setDate] = useState(new Date());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -52,7 +51,7 @@ const EventForm = () => {
   const handleDropdownSkill = (setter, setError) => (event) => {
     const value = event.target.value;
     setSkill(value);
-    if (value === '') {
+    if (value === '') { // if empty, set error
       setError(true);
     } 
     else {
@@ -63,7 +62,7 @@ const EventForm = () => {
   const handleDropdownUrgent = (setter, setError) => (event) => {
     const value = event.target.value;
     setUR(value);
-    if (value === '') {
+    if (value === '') { // if empty, set error
       setError(true);
     } 
     else {
@@ -71,32 +70,20 @@ const EventForm = () => {
     }
   };
 
-  const handleStartDate = (selectedDate) => {
-    setStartDate(selectedDate);
-    if (selectedDate) {
-      setStartDateError(false); // Clear error if a valid date is selected
+  const handleStartDate = (date) => {
+    setStartDate(date);
+    setStartDateError(!date); // Set error if no date is selected
+  };
+  
+  const handleEndDate = (date) => {
+    setEndDate(date);
+    if (date && startDate && date < startDate) {
+      setEndDateError(true); // Set error if end date is before start date
     } else {
-      setStartDateError(true); // Set error if no date is selected
+      setEndDateError(!date); // Set error if no end date is selected
     }
   };
 
-  const handleEndDate = (selectedDate) => {
-    setEndDate(selectedDate);
-    if (selectedDate) {
-      setEndDateError(false); // Clear error if a valid date is selected
-    } else {
-      setEndDateError(true); // Set error if no date is selected
-    }
-  };
-
-  const validateDates = () => {
-    if (!startDate) {
-      setStartDateError(true); // if empty, set error
-    }
-    if (!endDate) {
-      setEndDateError(true); // if empty, set error
-    }
-  };
 
 
   const handleSubmit = (event) => {
@@ -111,12 +98,12 @@ const EventForm = () => {
       setSkillError(true)};
     if (urgency === ''){
       setUrgentError(true)};
-    if (startDate === ''){
+    if (startDate === null){
       setStartDateError(true)};
-    if (endDate === ''){
-        setEndDateError(true)};
+    if (endDate === null){
+      setEndDateError(true)};
     if (!eventNameError && !DescriptionError && !areaError && !skillError && !urgentError && !startDateError && !endDateError &&
-        eventName && eventD && area && skill && urgency && startDate && endDate) {
+        eventName && eventD && area && skill && urgency && startDate && endDate) { // if all fields get filled and no errors
       console.log('Form Save');
       navigate('/save'); // Navigate to save page
     } 
@@ -141,7 +128,7 @@ const EventForm = () => {
               placeholder="Event Name *"
               value={eventName}
               onChange={handleName(setEventName, setEventNameError)}
-              maxLength={100} /* limit length to 50 characters */
+              maxLength={100} /* limit length to 100 characters */
               className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${eventNameError ? 'border-red-500' : 'border-gray-600'}`}
             />
 
@@ -173,7 +160,8 @@ const EventForm = () => {
                   onChange={handleDropdownSkill(setSkill, setSkillError)}
                   className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${skillError ? 'border-red-500' : 'border-gray-600'}`}
                 >
-                <option value="" disabled>Select a skill *</option>
+                {/* drop down options */}
+                <option value="" disabled>Select a skill *</option> 
                 <option value="skill1">Dental</option>
                 <option value="skill2">Nurse</option>
                 <option value="skill3">Pharm Tech</option>
@@ -189,6 +177,7 @@ const EventForm = () => {
                   onChange={handleDropdownUrgent(setUR, setUrgentError)}
                   className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${urgentError ? 'border-red-500' : 'border-gray-600'}`}
                 >
+                  {/* drop down options */}
                 <option value="" disabled>Urgent *</option>
                 <option value="option1">Low</option>
                 <option value="option2">Medium</option>
@@ -215,10 +204,10 @@ const EventForm = () => {
               endDate={endDate}
               startDate={startDate}
               minDate={startDate}
-              className={`flex p-2 pr-4 rounded-md border-2 font-light w-72 h-12 ${startDateError ? 'border-red-500' : 'border-gray-600'}`}/>
+              className={`flex p-2 pr-4 rounded-md border-2 font-light w-72 h-12 ${endDateError ? 'border-red-500' : 'border-gray-600'}`}/>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button, if there has no error */}
             <button 
               onClick={handleSubmit}
               className="transition ease-in-out delay-500 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"

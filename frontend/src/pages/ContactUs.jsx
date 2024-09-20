@@ -1,3 +1,4 @@
+import { set } from 'date-fns';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,15 +15,17 @@ const ContactUs = () => {
   const [emailError, setEmailError] = useState(false);
   const [messageError, setMessageError] = useState(false);
 
+  const [error, setError] = useState('');
+
   const handleName = (setter, setError) => (event) => {
     const inputValue = event.target.value;
-    const nameType = /^[a-zA-Z\s]+$/;
+    const nameType = /^[a-zA-Z\s]+$/; // valid name type
     setter(inputValue);
     const isValid = nameType.test(inputValue);
     const isLong = inputValue.length > 50;
     const isEmpty = inputValue.length === 0;
-    if(!isValid || isLong || isEmpty){
-      setError(true);
+    if(!isValid || isLong || isEmpty){ //if there is an error
+      setError('please enter a valid name');
     }
     else{
       setError(false);
@@ -34,9 +37,9 @@ const ContactUs = () => {
     const emailType = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular email format
     setter(inputValue);
     const isValid = emailType.test(inputValue);
-    const isEmpty = inputValue.length === 0;
-    if (!isValid || isEmpty) {
-      setError(true);
+    const isEmpty = inputValue.length === 0; // if email is empty
+    if (!isValid || isEmpty) { // if there is an error
+      setError('please enter a valid email');
     } else {
       setError(false);
     }
@@ -45,9 +48,9 @@ const ContactUs = () => {
   const handleMessage = (setter, setError) =>(event) => {
     const inputValue = event.target.value;
     setter(inputValue);
-    const isEmpty = inputValue.length === 0;
-    if(isEmpty){
-      setError(true);
+    const isEmpty = inputValue.length === 0; // if message is empty
+    if(isEmpty){ // if there is an error
+      setError('please enter your message');
     }
     else{
       setError(false);
@@ -57,14 +60,24 @@ const ContactUs = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault(); 
-    if(!firstNameError && !lastNameError && !emailError && !messageError && firstName && lastName && email && message) {
+    setError('');
+    if(!firstNameError && !lastNameError && !emailError && !messageError && firstName && lastName && email && message) { //if there are no errors
       console.log('Submit');
       navigate('/submit');
     } else {
-      if (firstName.length === 0) setFirstNameError(true);
-      if (lastName.length === 0) setLastNameError(true);
-      if (email.length === 0) setEmailError(true);
-      if (message.length === 0) setMessageError(true);
+      // if there are errors, set error state to true and show error message in terminal
+      if (firstName.length === 0){
+        setFirstNameError('Please enter your valid first name');
+      }
+      if (lastName.length === 0) {
+        setLastNameError('Please enter your valid last name');
+      }
+      if (email.length === 0) {
+        setEmailError('Please enter your valid email');
+      }
+      if (message.length === 0) {
+        setMessageError('Please enter your message');
+      }
       console.log('Error: Invalid input');
     }
   }
@@ -84,6 +97,10 @@ const ContactUs = () => {
 
           <div className="space-y-4 w-full">
             {/* First Name Input */}
+            <div>
+              {firstNameError && <p className="text-red-500 mt-2 font-bold">{firstNameError}</p>}
+            </div>
+
             <input
               type="text"
               placeholder="First Name *"
@@ -92,7 +109,11 @@ const ContactUs = () => {
               maxLength={50} /* limit length to 50 characters */
               className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${firstNameError ? 'border-red-500' : 'border-gray-600'}`}
             />
+
             {/* Last Name Input */}
+            <div>
+              {lastNameError && <p className="text-red-500 mt-2 font-bold">{lastNameError}</p>}
+            </div>
             <input
               type="text"
               placeholder="Last Name *"
@@ -103,6 +124,9 @@ const ContactUs = () => {
             />
 
             {/* Email Input */}
+            <div>
+              {emailError && <p className="text-red-500 mt-2 font-bold">{emailError}</p>}
+            </div>
             <input
               type="email"
               placeholder="youremail@example.com *"
@@ -112,6 +136,9 @@ const ContactUs = () => {
               className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${emailError ? 'border-red-500' : 'border-gray-600'}`}
             />
             {/* Message Textarea */}
+            <div>
+              {messageError && <p className="text-red-500 mt-2 font-bold">{messageError}</p>}
+            </div>
             <textarea
               placeholder="Message"
               value={message}
@@ -121,7 +148,7 @@ const ContactUs = () => {
             />
             {/* Submit Button */}
             <button 
-              onClick={handleSubmit}
+              onClick={handleSubmit} // if there are no errors, navigate to submit page
               className="transition ease-in-out delay-500 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"
             >
               <p className="text-slate-50">
