@@ -13,6 +13,7 @@ import NotificationPage from "./pages/NotificationPage";
 import Register from "./pages/Register";
 import "./App.css";
 import Profile from "./pages/Profile";
+import Events from "./pages/Events";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
 
+          <Route path="/events" element={<Events />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/history" element={<History />} />
           <Route path="/volunteer" element={<VolunteerMatch />} />
