@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import matchImg from "../assets/match.png";
 
 const VolunteerMatch = () => {
+// fake skill data
   const skillsData = {
     "Volunteer 1": {
       name: "Alice Johnson",
