@@ -5,7 +5,7 @@ import LogoImg from "../assets/Logo.jpg";
 import Bgimage from "../assets/bgimage.jpg";
 import Bg from "../assets/bg.jpg";
 import Navbar from "../components/Navbar";
-import Slideshow from "./Slideshow";
+import Slideshow from "../components/Slideshow";
 
 const HomePage = () => {
   return (

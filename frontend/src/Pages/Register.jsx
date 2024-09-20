@@ -80,7 +80,7 @@ export default function Login2() {
           className="form-large-text  lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%]  sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-slate-800 shadow-2xl"
           onSubmit={handleSubmit}
         >
-          <h1 className=" text-5xl text-main font-bold text-center mb-3 ">TALKConnect</h1>
+          <h1 className=" text-4xl text-main font-bold text-center my-3 ">TALKConnect</h1>
           <div className="relative mb-2">
             <label className="flex flex-col sm:text-lg ">Email</label>
             <div className="relative">
