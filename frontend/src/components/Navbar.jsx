@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import {Link} from 'react-router-dom'
 import handlogo from '../assets/handlogo.jpg'
 
-
 const Navbar = () => {
   const [dropdown, setDropdown] = useState(false);
+  let hideDropdownTimeout;
 
   return (
     <div className="bg-white-300"> 
@@ -20,27 +20,42 @@ const Navbar = () => {
          <ul className="flex space-x-10">
           <li><Link to="/" className="text-teal-600 hover:text-gray-300">Home</Link></li>
           <li><Link to="/events" className="text-teal-600 hover:text-gray-300">Events</Link></li>
-          <li><Link to="/emergency" className="text-teal-600 hover:text-gray-300">Emergency</Link></li>
           <li><Link to="/recruit" className="text-teal-600 hover:text-gray-300">Recruit</Link></li>
+          <li><Link to="/notifications" className="text-teal-600 hover:text-gray-300">Notifications</Link></li>
           <li><Link to="/about" className="text-teal-600 hover:text-gray-300">About</Link></li>
 
           {/* Dropdown Menu for login starts here */}
-          <li className="relative">
-            <button 
-              onClick={() => setDropdown(!dropdown)} 
+          
+          <li 
+            className="relative"
+            onMouseEnter={() => {
+              clearTimeout(hideDropdownTimeout);
+              setDropdown(true);
+            }}
+            onMouseLeave={() => {
+              hideDropdownTimeout = setTimeout(() => setDropdown(false), 200); // Delay closing by 200ms
+            }}
+          >
+            <Link 
+              to="/loginpage" 
               className="text-teal-600 hover:text-gray-300"
             >
               Log In
-            </button>
+            </Link>
 
-            {/* Dropdown Content for the login button*/}
             {dropdown && (
               <ul className="absolute top-12 right-0 bg-white border rounded-md shadow-lg py-2 space-y-2 z-10">
-                <li><Link to="/register" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Register</Link></li>
+                <li>
+                  <Link 
+                    to="/register" 
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Register
+                  </Link>
+                </li>
               </ul>
             )}
           </li>
- 
         </ul>
       </nav>
     </div>
