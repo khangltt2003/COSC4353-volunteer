@@ -25,7 +25,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
-
           <Route path="/events" element={<Events />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/history" element={<History />} />

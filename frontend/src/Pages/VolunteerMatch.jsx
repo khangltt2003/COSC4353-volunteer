@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import matchImg from "../assets/match.png";
 
 const VolunteerMatch = () => {
-// fake skill data
+  // fake skill data
   const skillsData = {
     "Volunteer 1": {
       name: "Alice Johnson",
@@ -66,12 +66,12 @@ const VolunteerMatch = () => {
   };
 
   return (
-    <div className="relative min-h-screen font-black space-y-16 bg-cover bg-center bg-[url('/Match.png')]">
-      <div className="absolute left-0 bottom-0 p-4">
+    <div className="relative min-h-screen w-[100%] flex  justify-center items-center font-black  bg-cover bg-center bg-[url('/Match.png')]">
+      <div className=" p-4">
         <img src={matchImg} alt="Match Image" className="max-w-xl h-auto" />
       </div>
 
-      <div className="flex justify-end items-center min-h-screen p-4">
+      <div className="flex justify-center items-center min-h-screen p-4">
         <div className="w-full max-w-md">
           <div className="flex flex-col items-center justify-center h-full bg-stone-50 rounded-lg p-6">
             <div className="space-y-4 w-full">

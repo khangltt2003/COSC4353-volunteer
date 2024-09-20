@@ -10,21 +10,19 @@ import Slideshow from "../components/Slideshow";
 const HomePage = () => {
   return (
     <div>
-      <div className="relative">
-        <header className="bg-white border border-gray-200 rounded-lg shadow-lg max-w-lg mx-auto z-20 relative">
-          <div className="flex items-center justify-center h-screen">
-            <div className="text-center">
-              <h1 className="text-teal-600 text-3xl font-bold font-sans">Welcome to TALKConnect!</h1>
-              <h2 className="text-teal-500">Pioneers in engaging volunteers for the healthcare community.</h2>
-              <br />
-              <Link to="/events">
-                <button className="bg-teal-500 text-white font-bold py-2 px-4 rounded hover:bg-teal-600 transition-colors duration-300">
-                  Find Opportunities
-                </button>
-              </Link>
-            </div>
+      <div className="relative h-screen flex flex-col items-center justify-center">
+        <div className=" bg-white border border-gray-200 rounded-lg shadow-lg max-w-lg mx-auto z-20 relative">
+          <div className="flex flex-col items-center justify-center h-[500px] p-5">
+            <h1 className="text-teal-600 text-3xl font-bold font-sans">Welcome to TALKConnect!</h1>
+            <h2 className="text-teal-500">Pioneers in engaging volunteers for the healthcare community.</h2>
+            <br />
+            <Link to="/events">
+              <button className="bg-teal-500 text-white font-bold py-2 px-4 rounded hover:bg-teal-600 transition-colors duration-300">
+                Find Opportunities
+              </button>
+            </Link>
           </div>
-        </header>
+        </div>
         <Slideshow />
 
         <main>
@@ -40,11 +38,10 @@ const HomePage = () => {
             <p></p>
           </section>
         </main>
-
-        <footer className="bg-gray-800 text-white p-4 text-center z-10">
-          <p>© 2024 TALKConnect. All rights reserved.</p>
-        </footer>
       </div>
+      <footer className="bg-gray-800 text-white p-4 text-center z-10">
+        <p>© 2024 TALKConnect. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

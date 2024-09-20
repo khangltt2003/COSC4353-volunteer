@@ -145,7 +145,9 @@ const EventForm = () => {
         {/* <img src={logo} alt="Logo Image" className="max-w-xs w-44 h-auto mt-5" /> */}
       </div>
       <div className="grid grid-cols-1">
-        <div className="flex flex-col items-center justify-center h-144 mx-auto p-6 rounded-lg bg-stone-50 -mt-11 max-w-2xl">
+        <div className="flex flex-col items-center justify-center h-144 mx-auto p-6 rounded-lg bg-stone-50">
+          <h1 className="text-4xl text-main mb-3">Create Event</h1>
+
           <div className="space-y-3 w-full">
             {/* Event Name Input */}
             <input
@@ -180,46 +182,44 @@ const EventForm = () => {
             />
 
             {/*Dropdowns*/}
-            <div className="flex items-center space-x-4">
-              {/* Require Skill Dropdown*/}
-              <div className="flex-1">
-                <label htmlFor="skill"></label>
-                <select
-                  id="skill"
-                  value={skill}
-                  onChange={handleDropdownSkill(setSkill, setSkillError)}
-                  className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${
-                    skillError ? "border-red-500" : "border-gray-600"
-                  }`}
-                >
-                  <option value="" disabled>
-                    Select a skill *
-                  </option>
-                  <option value="skill1">Dental</option>
-                  <option value="skill2">Nurse</option>
-                  <option value="skill3">Pharm Tech</option>
-                </select>
-              </div>
-
-              {/* Urgency Dropdown */}
-              <div className="flex-1">
-                <label htmlFor="urgency"></label>
-                <select
-                  id="urgency"
-                  value={urgency}
-                  onChange={handleDropdownUrgent(setUR, setUrgentError)}
-                  className={`pl-3 pr-4 text-left rounded-md border-2 w-72 h-12 font-light placeholder-slate-400 ${
-                    urgentError ? "border-red-500" : "border-gray-600"
-                  }`}
-                >
-                  <option value="" disabled>
-                    N/A *
-                  </option>
-                  <option value="option1">Urgency</option>
-                  <option value="option2">Non-urgent</option>
-                </select>
-              </div>
+            {/* Require Skill Dropdown*/}
+            <div>
+              <label htmlFor="skill"></label>
+              <select
+                id="skill"
+                value={skill}
+                onChange={handleDropdownSkill(setSkill, setSkillError)}
+                className={`w-full pl-3 pr-4 text-left rounded-md border-2  h-12 font-light placeholder-slate-400 ${
+                  skillError ? "border-red-500" : "border-gray-600"
+                }`}
+              >
+                <option value="" disabled>
+                  Select a skill *
+                </option>
+                <option value="skill1">Dental</option>
+                <option value="skill2">Nurse</option>
+                <option value="skill3">Pharm Tech</option>
+              </select>
             </div>
+
+            <div className="">
+              <label htmlFor="urgency"></label>
+              <select
+                id="urgency"
+                value={urgency}
+                onChange={handleDropdownUrgent(setUR, setUrgentError)}
+                className={`w-full pl-3 pr-4 text-left rounded-md border-2  h-12 font-light placeholder-slate-400 ${
+                  urgentError ? "border-red-500" : "border-gray-600"
+                }`}
+              >
+                <option value="" disabled>
+                  Urgency
+                </option>
+                <option value="option1">Urgency</option>
+                <option value="option2">Non-urgent</option>
+              </select>
+            </div>
+            {/* Urgency Dropdown */}
 
             {/* Event Data */}
             <div className="flex items-center space-x-4">
@@ -245,13 +245,13 @@ const EventForm = () => {
             </div>
 
             {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              className="transition ease-in-out delay-500 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"
-            >
-              <p className="text-slate-50">Save Event</p>
-            </button>
           </div>
+          <button
+            onClick={handleSubmit}
+            className="transition ease-in-out delay-500 hover:-translate-y-1 mt-4 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"
+          >
+            <p className="text-slate-50">Save Event</p>
+          </button>
         </div>
       </div>
     </div>
