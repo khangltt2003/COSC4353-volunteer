@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 .form-large-text {
+<<<<<<< HEAD
   @apply text-lg; /* Apply the desired Tailwind text size utility class */
+=======
+  @apply text-base; /* Apply the desired Tailwind text size utility class */
+>>>>>>> develop
 }
