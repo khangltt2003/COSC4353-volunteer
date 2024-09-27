@@ -1,7 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 // import AuthContext from "../../context/AuthContext";
 import UserImg from "../assets/User.png";
-import axios from "axios";
+import ProfileHook from "../../context/ProfileHook";
+import AuthContext from "../../context/AuthContext";
+import axios from "../axios";
+import { useNavigate } from "react-router-dom";
 
 const states = [
   { code: "AL", name: "Alabama" },
@@ -58,61 +61,70 @@ const states = [
   { code: "PR", name: "Puerto Rico" },
 ];
 
+const cloneProfile = {
+  fullName: "Alex Johnson",
+  address1: "123 Maple Street",
+  address2: "Apt 4B",
+  city: "Springfield",
+  state: "TX",
+  zipcode: "62704",
+  // email: "alex.johnson@example.com",
+  preferences: ["Outdoor activities", "Reading", "Traveling"],
+  availability: ["09-25-2024", "02-15-2024"],
+  bio: "Hi! I'm Alex, a software engineer with a passion for coding, hiking, and learning new things. When I'm not working, I love spending time outdoors or with a good book. Always up for a new challenge!",
+};
+
 const Profile = () => {
-  // const { authTokens } = useContext(AuthContext);
+  const { authTokens } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
-  const [profileLoaded, setProfileLoaded] = useState(false);
-  const [fullName, setFullName] = useState("asdf");
-  const [addressOne, setAddressOne] = useState("asdf");
-  const [addressTwo, setAddressTwo] = useState("asdf");
-  const [city, setCity] = useState("asdf");
-  const [state, setState] = useState("asdf");
-  const [zipCode, setZipCode] = useState("asdf");
-  const [preferences, setPreferences] = useState([]);
+  // const [profileLoaded, setProfileLoaded] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [address1, setAddress1] = useState("");
+  const [address2, setAddress2] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [preferences, setPreferences] = useState("");
   const [availability, setAvailability] = useState([]);
-  const [email, setEmail] = useState("asdf");
-  const [bio, setBio] = useState("asdf");
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(["09-25-2024", "02-15-2024"]);
 
-  // useEffect(() => {
-  //   const getProfile = async () => {
-  //     try {
-  //       const response = await axios({
-  //         method: "GET",
-  //         url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
-  //         headers: {
-  //           Authorization: `Bearer ${authTokens.access}`,
-  //         },
-  //       });
-  //       setProfile(response.data);
-  //       setProfileLoaded(true);
-  //     } catch (error) {
-  //       console.error("Error fetching profile:", error);
-  //     }
-  //   };
-  //   getProfile();
-  // }, [authTokens.access]);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // useEffect(() => {
-  //   if (profileLoaded && profile) {
-  //     setFullName(profile.fullname || "");
-  //     setAddressOne(profile.address1 || "");
-  //     setAddressTwo(profile.address2 || "");
-  //     setCity(profile.city || "");
-  //     setState(profile.state || "");
-  //     setZipCode(profile.zipcode || "");
-  //     setPreferences(profile.preference || []);
-  //     setAvailability(profile.availability || []);
-  //     setEmail(profile.user.email || "");
-  //     setBio(profile.bio || "");
-  //     setIsLoading(false);
-  //   }
-  // }, [profile, profileLoaded]);
+  const navigate = useNavigate();
 
-  const handleInputChange = (setter) => (e) => {
-    setter(e.target.value);
-  };
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const response = await axios({
+          method: "GET",
+          url: `/user/profile/`,
+        });
+        setProfile(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    getProfile();
+  }, [authTokens, navigate]);
+
+  useEffect(() => {
+    if (!isLoading && profile) {
+      setFullName(profile.fullname || "");
+      setAddress1(profile.address1 || "");
+      setAddress2(profile.address2 || "");
+      setCity(profile.city || "");
+      setState(profile.state || "");
+      setZipCode(profile.zipcode || "");
+      setPreferences(profile.preferences || "");
+      setAvailability(profile.availability || []);
+      // setEmail(profile.user.email || "");
+      setBio(profile.bio || "");
+    }
+  }, [profile, isLoading]);
 
   const handleZipChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 9);
@@ -131,8 +143,8 @@ const Profile = () => {
     //       },
     //       data: {
     //         fullname: fullName,
-    //         address1: addressOne,
-    //         address2: addressTwo,
+    //         address1: address1,
+    //         address2: address2,
     //         city: city,
     //         state: state,
     //         zipcode: zipCode,
@@ -153,12 +165,8 @@ const Profile = () => {
 
   const handleAddDate = () => {
     if (selectedDate) {
-      const dateObj = new Date(selectedDate);
-      const formattedDate = `${String(dateObj.getDate()).padStart(2, "0")}-${String(dateObj.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}-${dateObj.getFullYear()}`;
-      setAvailability([...availability, formattedDate]);
+      console.log(selectedDate);
+      setAvailability([...availability, selectedDate]);
       setSelectedDate("");
     }
   };
@@ -170,7 +178,7 @@ const Profile = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <section className="bg-[#6E6E6E] flex items-center justify-center">
+    <section className="bg-gray-100 flex items-center justify-center">
       <div className="w-full max-w-[85%] bg-white max-h-[95%] h-full rounded-lg p-8 flex  shadow-teal-600 shadow-2xl">
         <div className="w-1/5 flex flex-col  items-center border-r border-gray-300 pr-8">
           <img src={UserImg} alt="Profile" className="w-48 h-48 rounded-full border-1 border-black mb-4 mt-6" />
@@ -178,121 +186,178 @@ const Profile = () => {
           <input
             type="text"
             value={bio}
-            onChange={handleInputChange(setBio)}
+            disabled={isEditing ? false : true}
+            onChange={(e) => setBio(e.target.value)}
             placeholder="Enter your bio..."
             className="mt-2 w-full p-2 border rounded border-gray-300 text-sm"
           />
         </div>
         <div className="w-3/4 pl-8 ">
-          <h3 className="text-4xl font-semibold mb-6">Edit Your Profile</h3>
+          <h3 className="text-4xl font-semibold mb-6">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
           <hr className="mb-6" />
           <form onSubmit={handleSubmit} className="space-y-6">
-            {[
-              { label: "Full Name", value: fullName, setter: setFullName },
-              { label: "Address Line 1", value: addressOne, setter: setAddressOne },
-              { label: "Address Line 2", value: addressTwo, setter: setAddressTwo },
-              { label: "City", value: city, setter: setCity },
-              { label: "State", value: state, setter: setState, type: "select" },
-              { label: "Zip Code", value: zipCode, setter: handleZipChange },
-            ].map(({ label, value, setter, type }, index) => (
-              <div key={index} className="mb-4 flex items-center">
-                <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">{label}:</label>
-                {type === "select" ? (
-                  <select value={value} onChange={handleInputChange(setter)} className="flex-grow p-2 border rounded border-gray-300 text-sm">
-                    <option value="">Select a state</option>
-                    {states.map(({ code, name }) => (
-                      <option key={code} value={code}>
-                        {name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={handleInputChange(setter)}
-                    className="flex-grow p-2 border rounded border-gray-300 text-sm"
-                  />
-                )}
-                <button
-                  type="button"
-                  onClick={() => setter(value)}
-                  className="ml-2 px-2 py-1 bg-teal-600 text-white rounded text-xs transition-transform transform hover:scale-105"
-                >
-                  Edit
-                </button>
-              </div>
-            ))}
-            <div className="md:col-span-2">
-              <label htmlFor="preferences" className="block font-bold text-sm mb-2 ">
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Fullname:</label>
+              <input
+                type="text"
+                disabled={isEditing ? false : true}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              />
+            </div>
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 1:</label>
+              <input
+                type="text"
+                disabled={isEditing ? false : true}
+                value={address1}
+                onChange={(e) => setAddress1(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              />
+            </div>
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 2:</label>
+              <input
+                type="text"
+                disabled={isEditing ? false : true}
+                value={address2}
+                onChange={(e) => setAddress2(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              />
+            </div>
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">City:</label>
+              <input
+                type="text"
+                disabled={isEditing ? false : true}
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              />
+            </div>
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Zip Code:</label>
+              <input
+                type="text"
+                disabled={isEditing ? false : true}
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              />
+            </div>
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">State:</label>
+              <select
+                disabled={isEditing ? false : true}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              >
+                <option value="">Select a state</option>
+                {states.map(({ code, name }) => (
+                  <option key={code} value={code}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Skill:</label>
+              <select
+                disabled={isEditing ? false : true}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
+              >
+                <option value="">Select a state</option>
+                {states.map(({ code, name }) => (
+                  <option key={code} value={code}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4 flex items-center">
+              <label htmlFor="preferences" className="block font-bold text-sm mb-0 mr-2 w-1/6">
                 Preferences:
               </label>
               <textarea
                 id="preferences"
-                value={preferences.join("\n")}
-                onChange={(e) => setPreferences(e.target.value.split("\n"))}
-                className="w-full p-1 border rounded border-gray-300 text-sm h-24"
+                disabled={isEditing ? false : true}
+                value={preferences}
+                onChange={(e) => setPreferences(e.target.value)}
+                className="flex-grow p-2 border rounded border-gray-300 text-sm"
               />
-              <button
-                type="button"
-                onClick={() => setPreferences(preferences)}
-                className="ml-2 px-2 py-1 bg-teal-600 text-white rounded text-xs transition-transform transform hover:scale-105"
-              >
-                Edit
-              </button>
             </div>
-            <div className="md:col-span-2">
-              <label htmlFor="datePicker" className="block font-bold text-sm mb-2">
-                Add Availability Date:
-              </label>
-              <div className="flex items-center">
-                <input
-                  type="date"
-                  id="datePicker"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddDate}
-                  className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
-                >
-                  Add
-                </button>
-              </div>
 
-              <div className="mt-4">
-                <label className="block font-bold text-sm mb-2">Current Availability</label>
-                <select
-                  className="max-w-xs p-1 border rounded border-gray-300 text-sm"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                >
-                  <option value="" disabled>
-                    Select a date
-                  </option>
-                  {availability.map((date) => (
-                    <option key={date} value={date}>
-                      {date}
-                    </option>
-                  ))}
-                </select>
-                {availability.length > 0 && (
+            <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability</label>
+              <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
+                {availability.map((el, i) => {
+                  return (
+                    <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
+                      {el}
+                      {isEditing && (
+                        <div className="ml-1">
+                          <i className="bx bx-x"></i>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {isEditing && (
+              <div className="mb-4 flex items-center">
+                <label htmlFor="datePicker" className="block font-bold text-sm mb-0 mr-2 w-1/6">
+                  Add Availability Date:
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="date"
+                    id="datePicker"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
+                  />
                   <button
                     type="button"
-                    onClick={() => handleRemoveDate(selectedDate)}
-                    className="ml-4 px-2 py-1 bg-red-500 text-white rounded text-sm transition-transform transform hover:scale-105"
+                    onClick={handleAddDate}
+                    className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
                   >
-                    Remove Selected
+                    Add
                   </button>
-                )}
+                </div>
               </div>
-            </div>
-            <div className="flex justify-end ">
-              <button type="submit" className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105">
-                Save Changes
-              </button>
+            )}
+            <div className="flex justify-end gap-4 ">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={isEditing ? false : true}
+                    type="submit"
+                    className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                  >
+                    Save Changes
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(!isEditing)}
+                  className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                >
+                  Edit Profile
+                </button>
+              )}
             </div>
           </form>
         </div>

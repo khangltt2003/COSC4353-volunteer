@@ -20,13 +20,6 @@ export default function Login2() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("userToken") || sessionStorage.getItem("userToken");
-    if (token) {
-      navigate("/");
-    }
-  }, [navigate]);
-
   const handleChange = (e) => {
     setError(null);
     const { name, value } = e.target;
@@ -42,27 +35,9 @@ export default function Login2() {
     const status = await login(loginData);
     if (status != 200) {
       setError("Incorrect email or password");
+    } else {
+      navigate("/profile");
     }
-    navigate("/profile");
-    // if (email === "admin" && password === "pass") {
-    //   setError("");
-    //   alert("Login successful!");
-
-    //   // Fake token
-    //   const mockToken = "mock-token-123";
-
-    //   if (rememberMe) {
-    //     localStorage.setItem("userToken", mockToken);
-    //     sessionStorage.removeItem("userToken"); // Ensure sessionStorage is cleared
-    //   } else {
-    //     sessionStorage.setItem("userToken", mockToken);
-    //     localStorage.removeItem("userToken"); // Ensure localStorage is cleared
-    //   }
-
-    //   navigate("/");
-    // } else {
-    //   setError("Incorrect email or password");
-    // }
   };
 
   return (

@@ -1,25 +1,23 @@
- import React, { useState } from 'react';
-import HomePage from './Homepage';
+import { useState } from "react";
 
 const NotificationPage = () => {
-  
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      type: 'assignment',
-      message: 'New event assignment available!',
+      type: "assignment",
+      message: "New event assignment available!",
       timestamp: new Date().toISOString(),
     },
     {
       id: 2,
-      type: 'update',
-      message: 'Event update: Time changed to 3 PM.',
+      type: "update",
+      message: "Event update: Time changed to 3 PM.",
       timestamp: new Date().toISOString(),
     },
     {
       id: 3,
-      type: 'reminder',
-      message: 'Reminder: Meeting at 2 PM tomorrow.',
+      type: "reminder",
+      message: "Reminder: Meeting at 2 PM tomorrow.",
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -27,21 +25,21 @@ const NotificationPage = () => {
   const Notification = ({ type, message, timestamp }) => {
     let bgColor, borderColor;
     switch (type) {
-      case 'assignment':
-        bgColor = 'bg-green-100';
-        borderColor = 'border-green-400';
+      case "assignment":
+        bgColor = "bg-green-100";
+        borderColor = "border-green-400";
         break;
-      case 'update':
-        bgColor = 'bg-gray-100';
-        borderColor = 'border-gray-400';
+      case "update":
+        bgColor = "bg-gray-100";
+        borderColor = "border-gray-400";
         break;
-      case 'reminder':
-        bgColor = 'bg-yellow-100';
-        borderColor = 'border-yellow-400';
+      case "reminder":
+        bgColor = "bg-yellow-100";
+        borderColor = "border-yellow-400";
         break;
       default:
-        bgColor = 'bg-white';
-        borderColor = 'border-gray-200';
+        bgColor = "bg-white";
+        borderColor = "border-gray-200";
     }
 
     return (
@@ -57,16 +55,11 @@ const NotificationPage = () => {
       <h1 className="text-2xl font-bold mb-6">Notifications</h1>
       <div className="p-6">
         {notifications.map((notif) => (
-          <Notification
-            key={notif.id}
-            type={notif.type}
-            message={notif.message}
-            timestamp={notif.timestamp}
-          />
+          <Notification key={notif.id} type={notif.type} message={notif.message} timestamp={notif.timestamp} />
         ))}
       </div>
     </div>
   );
-}; 
+};
 
 export default NotificationPage;

@@ -71,10 +71,37 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    events = EventSerializer(many=True)
-    skills = SkillSerializer(many=True)
+    events = EventSerializer(many=True, read_only=True)
+    skills = SkillSerializer(many=True, read_only=True)
+    
+    event_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all(), write_only = True)
+    skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
+    
+    
     class Meta:
         model = UserProfile
         fields = "__all__"
 
+    def update(self, instance, validated_data):
+      events_data = validated_data.pop('event_ids', None)
+      skills_data = validated_data.pop('skill_ids', None)
+
+      instance.fullname = validated_data.get('fullname', instance.fullname)
+      instance.address1 = validated_data.get('address1', instance.address1)
+      instance.address2 = validated_data.get('address2', instance.address2)
+      instance.city = validated_data.get('city', instance.city)
+      instance.state = validated_data.get('state', instance.state)
+      instance.zipcode = validated_data.get('zipcode', instance.zipcode)
+      instance.preference = validated_data.get('preference', instance.preference)
+      instance.availability = validated_data.get('availability', instance.availability)
+
+      
+      if events_data is not None:
+          instance.events.set(events_data)  
+
+      if skills_data is not None:
+          instance.skills.set(skills_data)
+      instance.save()
+
+      return instance
 
