@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import handlogo from "../assets/handlogo.jpg";
+import AuthContext from "../../context/AuthContext";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const location = useLocation();
 
@@ -51,28 +53,15 @@ const Navbar = () => {
 
           {/* Dropdown Menu for login starts here */}
 
-          <li
-            className="relative"
-            onMouseEnter={() => {
-              clearTimeout(hideDropdownTimeout);
-              setDropdown(true);
-            }}
-            onMouseLeave={() => {
-              hideDropdownTimeout = setTimeout(() => setDropdown(false), 200); // Delay closing by 200ms
-            }}
-          >
-            <Link to="/login" className="text-teal-600 hover:text-gray-300">
-              Log In
-            </Link>
-
-            {dropdown && (
-              <ul className="absolute top-12 right-0 bg-white border rounded-md shadow-lg py-2 space-y-2 z-10">
-                <li>
-                  <Link to="/register" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Register
-                  </Link>
-                </li>
-              </ul>
+          <li className="relative">
+            {user ? (
+              <Link to="/logout" className="text-teal-600 hover:text-gray-300">
+                Log Out
+              </Link>
+            ) : (
+              <Link to="/login" className="text-teal-600 hover:text-gray-300">
+                Log In
+              </Link>
             )}
           </li>
         </ul>

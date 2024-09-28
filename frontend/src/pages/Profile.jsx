@@ -85,11 +85,13 @@ const Profile = () => {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [preferences, setPreferences] = useState("");
+  const [skills, setSkills] = useState([]);
   const [availability, setAvailability] = useState([]);
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(["09-25-2024", "02-15-2024"]);
+  const [selectedSkill, setSelectedSkill] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -120,6 +122,7 @@ const Profile = () => {
       setState(profile.state || "");
       setZipCode(profile.zipcode || "");
       setPreferences(profile.preferences || "");
+      setSkills(profile.skills || []);
       setAvailability(profile.availability || []);
       // setEmail(profile.user.email || "");
       setBio(profile.bio || "");
@@ -171,8 +174,25 @@ const Profile = () => {
     }
   };
 
-  const handleRemoveDate = (dateToRemove) => {
-    setAvailability(availability.filter((date) => date !== dateToRemove));
+  const handleRemoveDate = (index) => {
+    console.log(index);
+    setAvailability(availability.filter((date, i) => i !== index));
+  };
+
+  const handleAddSkill = () => {
+    if (selectedSkill) {
+      setSkills([...skills, selectedSkill]);
+      setSelectedSkill("");
+    }
+  };
+
+  const handleRemoveSkill = (index) => {
+    console.log(index);
+    setSkills(skills.filter((skill, i) => i !== index));
+  };
+
+  const handleCancel = () => {
+    window.location.reload();
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -264,23 +284,6 @@ const Profile = () => {
             </div>
 
             <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Skill:</label>
-              <select
-                disabled={isEditing ? false : true}
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              >
-                <option value="">Select a state</option>
-                {states.map(({ code, name }) => (
-                  <option key={code} value={code}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-4 flex items-center">
               <label htmlFor="preferences" className="block font-bold text-sm mb-0 mr-2 w-1/6">
                 Preferences:
               </label>
@@ -294,6 +297,47 @@ const Profile = () => {
             </div>
 
             <div className="mb-4 flex items-center">
+              <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Skills:</label>
+              <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
+                {skills.map((el) => {
+                  return (
+                    <div className="border flex rounded p-2 bg-teal-600 text-white" key={el.id}>
+                      {el.name}
+                      {isEditing && (
+                        <div className="ml-1" onClick={() => handleRemoveSkill(el.id)}>
+                          <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {isEditing && (
+              <div className="mb-4 flex items-center">
+                <label htmlFor="datePicker" className="block font-bold text-sm mb-0 mr-2 w-1/6">
+                  Add Availability Date:
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="date"
+                    id="datePicker"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddDate}
+                    className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="mb-4 flex items-center">
               <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability</label>
               <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
                 {availability.map((el, i) => {
@@ -301,8 +345,8 @@ const Profile = () => {
                     <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
                       {el}
                       {isEditing && (
-                        <div className="ml-1">
-                          <i className="bx bx-x"></i>
+                        <div className="ml-1" onClick={() => handleRemoveDate(i)}>
+                          <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
                         </div>
                       )}
                     </div>
@@ -337,7 +381,7 @@ const Profile = () => {
               {isEditing ? (
                 <>
                   <button
-                    onClick={() => setIsEditing(!isEditing)}
+                    onClick={() => handleCancel()}
                     className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
                   >
                     Cancel

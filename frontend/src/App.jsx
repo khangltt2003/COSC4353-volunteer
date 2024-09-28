@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Events from "./pages/Events";
 import { AuthProvider } from "../context/AuthContext";
+import Logout from "./pages/Logout";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/save" element={<Save />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/submit" element={<Thankyou />} />
+            <Route path="/logout" element={<Logout />} />
             {/*<Route path="/about" element={<About />} />*/}
           </Routes>
         </AuthProvider>

@@ -53,7 +53,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     // console.log(error);
-    //expired token and it's not a refresh token request
+    //expired access token
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; //
 
@@ -68,7 +68,7 @@ axiosInstance.interceptors.response.use(
         console.error("Refresh token expired, redirect to login");
         setTimeout(() => {
           window.location.href = "/login";
-        }, 30000);
+        }, 1000);
         return Promise.reject(error);
       }
     }
