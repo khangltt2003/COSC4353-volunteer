@@ -90,8 +90,10 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(["09-25-2024", "02-15-2024"]);
-  const [selectedSkill, setSelectedSkill] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedSkill, setSelectedSkill] = useState({ id: null, name: "" });
+
+  const [allSkills, setAllSkills] = useState([]);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -129,41 +131,40 @@ const Profile = () => {
     }
   }, [profile, isLoading]);
 
-  const handleZipChange = (e) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 9);
-    setZipCode(value);
-  };
+  useEffect(() => {
+    const getSkills = async () => {
+      const response = await axios({
+        url: "/skill/",
+        method: "GET",
+      });
+      setAllSkills(response.data);
+    };
+    getSkills();
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    //   try {
-    //     await axios({
-    //       method: "PUT",
-    //       url: `${import.meta.env.VITE_SERVER_URL}/user/profile/`,
-    //       headers: {
-    //         Authorization: `Bearer ${authTokens.access}`,
-    //         "Content-Type": "application/json",
-    //       },
-    //       data: {
-    //         fullname: fullName,
-    //         address1: address1,
-    //         address2: address2,
-    //         city: city,
-    //         state: state,
-    //         zipcode: zipCode,
-    //         preference: preferences,
-    //         availability: availability,
-    //         user: {
-    //           email: email,
-    //           bio: bio,
-    //         },
-    //       },
-    //     });
-    //     alert("Profile updated successfully!");
-    //   } catch (error) {
-    //     console.error("Error updating profile:", error.response.data);
-    //     alert(`Failed to update profile: ${error.response.data.message || error.message}`);
-    //   }
+  const handleSubmit = async () => {
+    try {
+      await axios({
+        method: "PATCH",
+        url: `/user/profile/`,
+        data: {
+          fullname: fullName,
+          address1: address1,
+          address2: address2,
+          city: city,
+          state: state,
+          zipcode: zipCode,
+          preference: preferences,
+          skill_ids: skills.map((s) => s.id),
+          availability: availability,
+        },
+      });
+      alert("Profile updated successfully!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating profile:", error.response.data);
+      alert(`Failed to update profile: ${error.response.data.message || error.message}`);
+    }
   };
 
   const handleAddDate = () => {
@@ -180,15 +181,15 @@ const Profile = () => {
   };
 
   const handleAddSkill = () => {
-    if (selectedSkill) {
+    if (selectedSkill && !skills.some((el) => el.id === selectedSkill.id)) {
+      console.log(selectedSkill);
       setSkills([...skills, selectedSkill]);
-      setSelectedSkill("");
     }
+    setSelectedSkill("");
   };
 
   const handleRemoveSkill = (index) => {
-    console.log(index);
-    setSkills(skills.filter((skill, i) => i !== index));
+    setSkills(skills.filter((skill) => skill.id !== index));
   };
 
   const handleCancel = () => {
@@ -215,7 +216,7 @@ const Profile = () => {
         <div className="w-3/4 pl-8 ">
           <h3 className="text-4xl font-semibold mb-6">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
           <hr className="mb-6" />
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-6">
             <div className="mb-4 flex items-center">
               <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Fullname:</label>
               <input
@@ -315,25 +316,31 @@ const Profile = () => {
             </div>
             {isEditing && (
               <div className="mb-4 flex items-center">
-                <label htmlFor="datePicker" className="block font-bold text-sm mb-0 mr-2 w-1/6">
-                  Add Availability Date:
-                </label>
-                <div className="flex items-center">
-                  <input
-                    type="date"
-                    id="datePicker"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddDate}
-                    className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
-                  >
-                    Add
-                  </button>
-                </div>
+                <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Add Skill:</label>
+
+                <select
+                  disabled={isEditing ? false : true}
+                  value={selectedSkill ? selectedSkill.id : ""}
+                  onChange={(e) => {
+                    const skill = allSkills.find((s) => s.id === parseInt(e.target.value)); // Find skill by ID
+                    setSelectedSkill(skill); // Update selected skill with the object
+                  }}
+                  className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                >
+                  <option value="">Select a skill</option>
+                  {allSkills.map((skill) => (
+                    <option key={skill.id} value={skill.id}>
+                      {skill.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={handleAddSkill}
+                  className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
+                >
+                  Add
+                </button>
               </div>
             )}
 
@@ -389,6 +396,7 @@ const Profile = () => {
                   <button
                     disabled={isEditing ? false : true}
                     type="submit"
+                    onClick={() => handleSubmit()}
                     className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
                   >
                     Save Changes
@@ -403,7 +411,7 @@ const Profile = () => {
                 </button>
               )}
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section>

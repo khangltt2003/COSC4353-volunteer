@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import UserProfile, Event
-from .serializers import UserSerializer, UserProfileSerializer, EventSerializer, UserRegistrationSerializer
+from .models import UserProfile, Event, Skill
+from .serializers import UserSerializer, UserProfileSerializer, EventSerializer, UserRegistrationSerializer, SkillSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -119,6 +119,13 @@ def event_detail(request, event_id):
     event.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(["GET"])
+def view_all_skill(request):
+  if request.method == "GET":
+    skills = Skill.objects.all()
+    serializer = SkillSerializer(skills, many = True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 #join event
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -147,3 +154,5 @@ def leave_event(request, event_id):
       event.save()
       return Response({'status': 'left'}, status=status.HTTP_200_OK)
     return Response({'error': 'Unable to leave'}, status=status.HTTP_400_BAD_REQUEST)
+
+
