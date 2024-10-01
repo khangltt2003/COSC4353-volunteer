@@ -12,10 +12,12 @@ const axiosInstance = axios.create({
 const refreshAccessToken = async () => {
   try {
     const authTokens = JSON.parse(localStorage.getItem("AuthTokens"));
-    // console.log(authTokens);
-    const response = await axiosInstance({
-      url: `/token/refresh/`,
-      method: "POST",
+    if (!authTokens) {
+      throw new Error("No refresh token available");
+    }
+
+    const response = await axios.post({
+      url: `${import.meta.env.VITE_SERVER_URL}/token/refresh/`,
       data: {
         refresh: authTokens.refresh,
       },
@@ -55,7 +57,7 @@ axiosInstance.interceptors.response.use(
     // console.log(error);
     //expired access token
     if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; //
+      originalRequest._retry = true;
 
       try {
         const newAccessToken = await refreshAccessToken();
@@ -63,13 +65,14 @@ axiosInstance.interceptors.response.use(
         // console.log("refresh access token");
         // retry the original request with the new token
         return axiosInstance(originalRequest);
-      } catch (error) {
+      } catch (refreshTokenError) {
         // handle refresh token failure (e.g., redirect to login)
         console.error("Refresh token expired, redirect to login");
+        localStorage.removeItem("AuthTokens");
         setTimeout(() => {
           window.location.href = "/login";
         }, 1000);
-        return Promise.reject(error);
+        return Promise.reject(refreshTokenError);
       }
     }
 

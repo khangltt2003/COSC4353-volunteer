@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import AuthContext from "./AuthContext";
-import axios from "axios";
+import axios from "../src/axios";
 
 const ProfileHook = () => {
   const { authTokens, logoutUser } = useContext(AuthContext);
@@ -11,8 +11,8 @@ const ProfileHook = () => {
     const getProfile = async () => {
       try {
         let response = await axios({
-          url: `${import.meta.env.REACT_APP_API_BASE_URL}/user/profile/`,
           method: "GET",
+          url: `${import.meta.env.REACT_APP_API_BASE_URL}/user/profile/`,
           headers: {
             Authorization: "Bearer " + String(authTokens.access),
           },

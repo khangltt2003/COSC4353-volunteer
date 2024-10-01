@@ -134,8 +134,8 @@ const Profile = () => {
   useEffect(() => {
     const getSkills = async () => {
       const response = await axios({
-        url: "/skill/",
         method: "GET",
+        url: "/skill/",
       });
       setAllSkills(response.data);
     };

@@ -52,19 +52,19 @@ class Event(models.Model):
         return self.name
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile", null=True)
-    fullname = models.CharField(max_length=100, blank=True )
-    address1 = models.CharField(max_length=100, blank=True )
-    address2 = models.CharField( max_length=100, blank=True )
-    city = models.CharField(max_length=100, blank=True )
-    state = models.CharField(max_length=2, choices=STATE_CHOICES, blank=True )
-    zipcode = models.CharField(max_length=9, blank=True )
-    skills = models.ManyToManyField(Skill, default=list, related_name='user_profile')
-    preference = models.TextField( blank=True)
-    availability = ArrayField(models.DateField(), default=list )
-    events = models.ManyToManyField(Event, default=list, related_name='participants')
+    fullname = models.CharField(max_length=100, blank=True)
+    address1 = models.CharField(max_length=100, blank=True)
+    address2 = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=2, choices=STATE_CHOICES, blank=True)
+    zipcode = models.CharField(max_length=9, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True, related_name='user_profile')  
+    preference = models.TextField(blank=True)
+    availability = ArrayField(models.DateField(), default=list, blank=True)
+    events = models.ManyToManyField(Event, blank=True, related_name='participants')
+    
     def __str__(self):
         return f'{self.user.username} Profile'
-
 
 
 

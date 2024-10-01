@@ -5,7 +5,7 @@ import LogoImg from "../assets/Logo.jpg";
 import { BiUser } from "react-icons/bi";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import axios from "axios";
+import axios from "../axios";
 import { useNavigate } from "react-router-dom";
 import PasswordChecklist from "react-password-checklist";
 
@@ -44,8 +44,7 @@ export default function Login2() {
       return;
     }
     try {
-      const response = await axios({
-        method: "POST",
+      const response = await axios.post({
         url: import.meta.env.VITE_SERVER_URL + "/user/register/",
         data: {
           email: data.email,
