@@ -187,7 +187,7 @@ const Profile = () => {
 
   return (
     <section className="bg-gray-100 flex items-center justify-center ">
-      <div className="w-full sm:max-w-[100%] md:max-w-[90%] lg:max-w-[85%] xl:max-w-[75%] bg-white h-[95%]  rounded-lg p-4 sm:p-6 md:p-8 flex md:flex-row shadow-teal-600 shadow-2xl my-4">
+      <div className="w-full md:max-w-[90%] lg:max-w-[85%] xl:max-w-[75%] bg-white  rounded-lg p-4 sm:p-6 md:p-8 flex md:flex-row shadow-teal-600 shadow-2xl my-4">
         <div className="w-1/6 flex flex-col   items-center gap-4 border-r border-gray-300 pr-8">
           <button
             className={`  text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
@@ -207,7 +207,7 @@ const Profile = () => {
         {isLoading ? (
           <Loading />
         ) : (
-          <div className="w-3/4 pl-8 ">
+          <div className="w-4/5 pl-8 ">
             {activeTab === "profile" ? (
               <>
                 <h3 className="text-2xl font-bold  mb-6">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
@@ -341,7 +341,7 @@ const Profile = () => {
                   )}
 
                   <div className="mb-4 flex items-center">
-                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability</label>
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability:</label>
                     <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
                       {availability.map((el, i) => {
                         return (

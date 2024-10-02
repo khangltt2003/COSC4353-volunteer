@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Events from "./pages/Events";
 import { AuthProvider } from "../context/AuthContext";
 import Logout from "./pages/Logout";
+import EventDetail from "./pages/EventDetail";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/events" element={<Events />} />
+            <Route path="/event" element={<Events />} />
+            <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/notifications" element={<NotificationPage />} />
             <Route path="/history" element={<History />} />
             <Route path="/volunteer" element={<VolunteerMatch />} />

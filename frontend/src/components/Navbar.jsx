@@ -12,10 +12,9 @@ const Navbar = () => {
   if (hideNavbarRoutes.includes(location.pathname.toLocaleLowerCase())) {
     return null;
   }
-  let hideDropdownTimeout;
 
   return (
-    <div className="bg-white-300">
+    <div className="bg-white-300 ">
       <nav className="flex items-center h-16 justify-between mx-auto px-2">
         {/*Logo and Website name*/}
         <Link to="/" className="flex items-center">
@@ -31,7 +30,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/events" className="text-teal-600 hover:text-gray-300">
+            <Link to="/event" className="text-teal-600 hover:text-gray-300">
               Events
             </Link>
           </li>
