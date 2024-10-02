@@ -6,7 +6,7 @@ import { BiUser } from "react-icons/bi";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import AuthContext from "../../context/AuthContext";
 
-export default function Login2() {
+export default function Login() {
   const { login } = useContext(AuthContext);
 
   const [loginData, setLoginData] = useState({

@@ -16,7 +16,8 @@ const refreshAccessToken = async () => {
       throw new Error("No refresh token available");
     }
 
-    const response = await axios.post({
+    const response = await axios({
+      method: "POST",
       url: `${import.meta.env.VITE_SERVER_URL}/token/refresh/`,
       data: {
         refresh: authTokens.refresh,

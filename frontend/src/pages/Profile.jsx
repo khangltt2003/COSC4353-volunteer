@@ -5,6 +5,8 @@ import ProfileHook from "../../context/ProfileHook";
 import AuthContext from "../../context/AuthContext";
 import axios from "../axios";
 import { useNavigate } from "react-router-dom";
+import EventBoard from "../components/EventBoard";
+import Loading from "../components/Loading";
 
 const states = [
   { code: "AL", name: "Alabama" },
@@ -61,19 +63,6 @@ const states = [
   { code: "PR", name: "Puerto Rico" },
 ];
 
-const cloneProfile = {
-  fullName: "Alex Johnson",
-  address1: "123 Maple Street",
-  address2: "Apt 4B",
-  city: "Springfield",
-  state: "TX",
-  zipcode: "62704",
-  // email: "alex.johnson@example.com",
-  preferences: ["Outdoor activities", "Reading", "Traveling"],
-  availability: ["09-25-2024", "02-15-2024"],
-  bio: "Hi! I'm Alex, a software engineer with a passion for coding, hiking, and learning new things. When I'm not working, I love spending time outdoors or with a good book. Always up for a new challenge!",
-};
-
 const Profile = () => {
   const { authTokens } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
@@ -87,11 +76,12 @@ const Profile = () => {
   const [preferences, setPreferences] = useState("");
   const [skills, setSkills] = useState([]);
   const [availability, setAvailability] = useState([]);
-  const [email, setEmail] = useState("");
-  const [bio, setBio] = useState("");
+  const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSkill, setSelectedSkill] = useState({ id: null, name: "" });
+
+  const [activeTab, setActiveTab] = useState("profile");
 
   const [allSkills, setAllSkills] = useState([]);
 
@@ -126,8 +116,7 @@ const Profile = () => {
       setPreferences(profile.preferences || "");
       setSkills(profile.skills || []);
       setAvailability(profile.availability || []);
-      // setEmail(profile.user.email || "");
-      setBio(profile.bio || "");
+      setEvents(profile.events || []);
     }
   }, [profile, isLoading]);
 
@@ -196,223 +185,235 @@ const Profile = () => {
     window.location.reload();
   };
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
-    <section className="bg-gray-100 flex items-center justify-center">
-      <div className="w-full max-w-[85%] bg-white max-h-[95%] h-full rounded-lg p-8 flex  shadow-teal-600 shadow-2xl">
-        <div className="w-1/5 flex flex-col  items-center border-r border-gray-300 pr-8">
-          <img src={UserImg} alt="Profile" className="w-48 h-48 rounded-full border-1 border-black mb-4 mt-6" />
-          <p className="text-xl font-semibold">{email}</p>
-          <input
-            type="text"
-            value={bio}
-            disabled={isEditing ? false : true}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Enter your bio..."
-            className="mt-2 w-full p-2 border rounded border-gray-300 text-sm"
-          />
+    <section className="bg-gray-100 flex items-center justify-center ">
+      <div className="w-full sm:max-w-[100%] md:max-w-[90%] lg:max-w-[85%] xl:max-w-[75%] bg-white h-[95%]  rounded-lg p-4 sm:p-6 md:p-8 flex md:flex-row shadow-teal-600 shadow-2xl my-4">
+        <div className="w-1/6 flex flex-col   items-center gap-4 border-r border-gray-300 pr-8">
+          <button
+            className={`  text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
+            onClick={() => setActiveTab("profile")}
+          >
+            <i className="bx bx-user mr-2"></i>
+            Your Profile
+          </button>
+          <button
+            className={`text-lg ${activeTab === "events" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
+            onClick={() => setActiveTab("events")}
+          >
+            <i className="bx bx-calendar-event mr-2"></i>
+            Your Events
+          </button>
         </div>
-        <div className="w-3/4 pl-8 ">
-          <h3 className="text-4xl font-semibold mb-6">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
-          <hr className="mb-6" />
-          <div className="space-y-6">
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Fullname:</label>
-              <input
-                type="text"
-                disabled={isEditing ? false : true}
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 1:</label>
-              <input
-                type="text"
-                disabled={isEditing ? false : true}
-                value={address1}
-                onChange={(e) => setAddress1(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 2:</label>
-              <input
-                type="text"
-                disabled={isEditing ? false : true}
-                value={address2}
-                onChange={(e) => setAddress2(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">City:</label>
-              <input
-                type="text"
-                disabled={isEditing ? false : true}
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Zip Code:</label>
-              <input
-                type="text"
-                disabled={isEditing ? false : true}
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">State:</label>
-              <select
-                disabled={isEditing ? false : true}
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              >
-                <option value="">Select a state</option>
-                {states.map(({ code, name }) => (
-                  <option key={code} value={code}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div className="w-3/4 pl-8 ">
+            {activeTab === "profile" ? (
+              <>
+                <h3 className="text-2xl font-bold  mb-6">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
+                <hr className="mb-6" />
+                <div className="space-y-6">
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Fullname:</label>
+                    <input
+                      type="text"
+                      disabled={isEditing ? false : true}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 1:</label>
+                    <input
+                      type="text"
+                      disabled={isEditing ? false : true}
+                      value={address1}
+                      onChange={(e) => setAddress1(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Address 2:</label>
+                    <input
+                      type="text"
+                      disabled={isEditing ? false : true}
+                      value={address2}
+                      onChange={(e) => setAddress2(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">City:</label>
+                    <input
+                      type="text"
+                      disabled={isEditing ? false : true}
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Zip Code:</label>
+                    <input
+                      type="text"
+                      disabled={isEditing ? false : true}
+                      value={zipCode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">State:</label>
+                    <select
+                      disabled={isEditing ? false : true}
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    >
+                      <option value="">Select a state</option>
+                      {states.map(({ code, name }) => (
+                        <option key={code} value={code}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-            <div className="mb-4 flex items-center">
-              <label htmlFor="preferences" className="block font-bold text-sm mb-0 mr-2 w-1/6">
-                Preferences:
-              </label>
-              <textarea
-                id="preferences"
-                disabled={isEditing ? false : true}
-                value={preferences}
-                onChange={(e) => setPreferences(e.target.value)}
-                className="flex-grow p-2 border rounded border-gray-300 text-sm"
-              />
-            </div>
+                  <div className="mb-4 flex items-center">
+                    <label htmlFor="preferences" className="block font-bold text-sm mb-0 mr-2 w-1/6">
+                      Preferences:
+                    </label>
+                    <textarea
+                      id="preferences"
+                      disabled={isEditing ? false : true}
+                      value={preferences}
+                      onChange={(e) => setPreferences(e.target.value)}
+                      className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                    />
+                  </div>
 
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Skills:</label>
-              <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                {skills.map((el) => {
-                  return (
-                    <div className="border flex rounded p-2 bg-teal-600 text-white" key={el.id}>
-                      {el.name}
-                      {isEditing && (
-                        <div className="ml-1" onClick={() => handleRemoveSkill(el.id)}>
-                          <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
-                        </div>
-                      )}
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Skills:</label>
+                    <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
+                      {skills.map((el) => {
+                        return (
+                          <div className="border flex rounded p-2 bg-teal-600 text-white" key={el.id}>
+                            {el.name}
+                            {isEditing && (
+                              <div className="ml-1" onClick={() => handleRemoveSkill(el.id)}>
+                                <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-            {isEditing && (
-              <div className="mb-4 flex items-center">
-                <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Add Skill:</label>
+                  </div>
+                  {isEditing && (
+                    <div className="mb-4 flex items-center">
+                      <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">Add Skill:</label>
 
-                <select
-                  disabled={isEditing ? false : true}
-                  value={selectedSkill ? selectedSkill.id : ""}
-                  onChange={(e) => {
-                    const skill = allSkills.find((s) => s.id === parseInt(e.target.value)); // Find skill by ID
-                    setSelectedSkill(skill); // Update selected skill with the object
-                  }}
-                  className="flex-grow p-2 border rounded border-gray-300 text-sm"
-                >
-                  <option value="">Select a skill</option>
-                  {allSkills.map((skill) => (
-                    <option key={skill.id} value={skill.id}>
-                      {skill.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={handleAddSkill}
-                  className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
-                >
-                  Add
-                </button>
-              </div>
-            )}
-
-            <div className="mb-4 flex items-center">
-              <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability</label>
-              <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                {availability.map((el, i) => {
-                  return (
-                    <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
-                      {el}
-                      {isEditing && (
-                        <div className="ml-1" onClick={() => handleRemoveDate(i)}>
-                          <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
-                        </div>
-                      )}
+                      <select
+                        disabled={isEditing ? false : true}
+                        value={selectedSkill ? selectedSkill.id : ""}
+                        onChange={(e) => {
+                          const skill = allSkills.find((s) => s.id === parseInt(e.target.value));
+                          setSelectedSkill(skill);
+                        }}
+                        className="flex-grow p-2 border rounded border-gray-300 text-sm"
+                      >
+                        <option value="">Select a skill</option>
+                        {allSkills.map((skill) => (
+                          <option key={skill.id} value={skill.id}>
+                            {skill.name}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={handleAddSkill}
+                        className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
+                      >
+                        Add
+                      </button>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-            {isEditing && (
-              <div className="mb-4 flex items-center">
-                <label htmlFor="datePicker" className="block font-bold text-sm mb-0 mr-2 w-1/6">
-                  Add Availability Date:
-                </label>
-                <div className="flex items-center">
-                  <input
-                    type="date"
-                    id="datePicker"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddDate}
-                    className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
-                  >
-                    Add
-                  </button>
+                  )}
+
+                  <div className="mb-4 flex items-center">
+                    <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability</label>
+                    <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
+                      {availability.map((el, i) => {
+                        return (
+                          <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
+                            {el}
+                            {isEditing && (
+                              <div className="ml-1" onClick={() => handleRemoveDate(i)}>
+                                <i className="bx bx-x rounded-full hover:bg-teal-800 "></i>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {isEditing && (
+                    <div className="mb-4 flex items-center">
+                      <label htmlFor="datePicker" className="block font-bold text-sm mb-0 mr-2 w-1/6">
+                        Add Availability Date:
+                      </label>
+                      <div className="flex items-center">
+                        <input
+                          type="date"
+                          id="datePicker"
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          className=" max-w-xs p-1 border rounded border-gray-300 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddDate}
+                          className="ml-4 px-2 py-1 bg-teal-600 text-white rounded text-sm transition-transform transform hover:scale-105"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex justify-end gap-4 ">
+                    {isEditing ? (
+                      <>
+                        <button
+                          onClick={() => handleCancel()}
+                          className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          disabled={isEditing ? false : true}
+                          type="submit"
+                          onClick={() => handleSubmit()}
+                          className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                        >
+                          Save Changes
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setIsEditing(!isEditing)}
+                        className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
+                      >
+                        Edit Profile
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </>
+            ) : (
+              <EventBoard events={events} />
             )}
-            <div className="flex justify-end gap-4 ">
-              {isEditing ? (
-                <>
-                  <button
-                    onClick={() => handleCancel()}
-                    className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    disabled={isEditing ? false : true}
-                    type="submit"
-                    onClick={() => handleSubmit()}
-                    className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
-                  >
-                    Save Changes
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className=" bg-teal-600 text-white px-4 py-2 rounded transition-transform transform hover:scale-105"
-                >
-                  Edit Profile
-                </button>
-              )}
-            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
