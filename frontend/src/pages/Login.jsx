@@ -35,6 +35,7 @@ export default function Login() {
     const status = await login(loginData);
     if (status != 200) {
       setError("Incorrect email or password");
+      setTimeout(() => {}, 5000);
     } else {
       navigate("/profile");
     }

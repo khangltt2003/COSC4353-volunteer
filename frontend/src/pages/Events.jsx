@@ -32,7 +32,7 @@ const Events = () => {
   return (
     <div className="w-[100%] min-h-screen space-y-16 bg-cover bg-center flex flex-col items-center">
       <div className="w-screen  flex items-center justify-center text-teal-600">
-        <p className="text-5xl mr-4">Volunteers Events</p>
+        <p className="text-5xl mr-4">Volunteer Events</p>
       </div>
       <div className="w-[50%]">
         <input

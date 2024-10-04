@@ -19,8 +19,12 @@ const EventDetail = () => {
     getEvent();
   }, [id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <div className="h-[70px]"></div>
       <div className="max-w-4xl w-full  bg-white shadow-lg rounded-lg p-8 mx-auto">
         {isLoading ? (
@@ -49,9 +53,11 @@ const EventDetail = () => {
             <div className="mb-6">
               <h2 className="text-2xl font-semibold text-teal-600 mb-2">Skills Needed</h2>
               <ul className="list-disc list-inside text-gray-700">
-                {event.skills_needed.map((skill) => (
-                  <li key={skill.id}>{skill.name}</li>
-                ))}
+                {event.skills_needed.length === 0 ? (
+                  <p>This event does not require any specific skills.</p>
+                ) : (
+                  event.skills_needed.map((skill) => <li key={skill.id}>{skill.name}</li>)
+                )}
               </ul>
             </div>
 

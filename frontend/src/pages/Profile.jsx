@@ -186,7 +186,7 @@ const Profile = () => {
   };
 
   return (
-    <section className="bg-gray-100 flex items-center justify-center ">
+    <section className="bg-gray-100 flex justify-center min-h-screen">
       <div className="w-full md:max-w-[90%] lg:max-w-[85%] xl:max-w-[75%] bg-white  rounded-lg p-4 sm:p-6 md:p-8 flex md:flex-row shadow-teal-600 shadow-2xl my-4">
         <div className="w-1/6 flex flex-col   items-center gap-4 border-r border-gray-300 pr-8">
           <button

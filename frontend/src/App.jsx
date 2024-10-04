@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
 import ContactUs from "./pages/ContactUs";
 import Thankyou from "./pages/Thankyou";
 import EventForm from "./pages/EventForm";
@@ -16,30 +16,43 @@ import Events from "./pages/Events";
 import { AuthProvider } from "../context/AuthContext";
 import Logout from "./pages/Logout";
 import EventDetail from "./pages/EventDetail";
+import AdminIndicator from "./components/AdminIndicator";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <Router>
       <div>
         <AuthProvider>
-          <Navbar />
           <Routes>
-            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/event" element={<Events />} />
-            <Route path="/event/:id" element={<EventDetail />} />
-            <Route path="/notifications" element={<NotificationPage />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/volunteer" element={<VolunteerMatch />} />
-            <Route path="/match" element={<MatchSave />} />
-            <Route path="/createevent" element={<EventForm />} />
-            <Route path="/save" element={<Save />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/submit" element={<Thankyou />} />
-            <Route path="/logout" element={<Logout />} />
-            {/*<Route path="/about" element={<About />} />*/}
+
+            <Route
+              element={
+                <>
+                  <AdminIndicator />
+                  <Navbar />
+                  <Outlet />
+                  <Footer />
+                </>
+              }
+            >
+              <Route path="/" element={<HomePage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/event" element={<Events />} />
+              <Route path="/event/:id" element={<EventDetail />} />
+              <Route path="/notifications" element={<NotificationPage />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/volunteer" element={<VolunteerMatch />} />
+              <Route path="/match" element={<MatchSave />} />
+              <Route path="/createevent" element={<EventForm />} />
+              <Route path="/save" element={<Save />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/submit" element={<Thankyou />} />
+              <Route path="/logout" element={<Logout />} />
+              {/* <Route path="/about" element={<About />} /> */}
+            </Route>
           </Routes>
         </AuthProvider>
       </div>
