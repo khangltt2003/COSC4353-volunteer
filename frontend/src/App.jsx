@@ -18,6 +18,7 @@ import Logout from "./pages/Logout";
 import EventDetail from "./pages/EventDetail";
 import AdminIndicator from "./components/AdminIndicator";
 import Footer from "./components/Footer";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -51,7 +52,7 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/submit" element={<Thankyou />} />
               <Route path="/logout" element={<Logout />} />
-              {/* <Route path="/about" element={<About />} /> */}
+              <Route path="/about" element={<About />} />
             </Route>
           </Routes>
         </AuthProvider>

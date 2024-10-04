@@ -4,8 +4,7 @@ import handlogo from "../assets/handlogo.jpg";
 import AuthContext from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
-  const [dropdown, setDropdown] = useState(false);
+  const { user, logout } = useContext(AuthContext);
   const location = useLocation();
 
   const hideNavbarRoutes = ["/login", "/register"];
@@ -50,13 +49,11 @@ const Navbar = () => {
             </Link>
           </li>
 
-          {/* Dropdown Menu for login starts here */}
-
           <li className="relative">
             {user ? (
-              <Link to="/logout" className="text-teal-600 hover:text-gray-300">
+              <p onClick={() => logout()} className="text-teal-600 hover:text-gray-300 cursor-pointer">
                 Log Out
-              </Link>
+              </p>
             ) : (
               <Link to="/login" className="text-teal-600 hover:text-gray-300">
                 Log In
