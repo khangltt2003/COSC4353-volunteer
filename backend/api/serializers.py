@@ -17,11 +17,41 @@ class SkillSerializer(serializers.ModelSerializer):
     fields = "__all__"
 
 class EventSerializer(serializers.ModelSerializer):
-    skills_needed = SkillSerializer(many=True)
+    skills_needed = SkillSerializer(many=True, read_only = True)
+    skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
     class Meta:
         model = Event
         fields = "__all__"
-        
+    
+    def create(self, validated_data):
+      skills_data = validated_data.pop('skill_ids', None)
+
+      event = Event.objects.create(**validated_data)
+
+      if skills_data is not None:
+          event.skills_needed.set(skills_data)
+      event.save()
+      return event
+    
+    def update(self, instance, validated_data):
+      skills_data = validated_data.pop('skill_ids', None)
+
+      instance.name = validated_data.get('name', instance.name)
+      instance.description = validated_data.get('description', instance.description)
+      instance.address = validated_data.get('address', instance.address)
+      instance.city = validated_data.get('city', instance.city)
+      instance.state = validated_data.get('state', instance.state)
+      instance.zipcode = validated_data.get('zipcode', instance.zipcode)
+      instance.date = validated_data.get('date', instance.date)
+      instance.time = validated_data.get('time', instance.time)
+      instance.urgency = validated_data.get('urgency', instance.urgency)
+
+
+      if skills_data is not None:
+          instance.skills_needed.set(skills_data)
+      instance.save()
+
+      return instance
 class UserRegistrationSerializer(serializers.ModelSerializer):
     email = serializers.CharField(
         # validators=[

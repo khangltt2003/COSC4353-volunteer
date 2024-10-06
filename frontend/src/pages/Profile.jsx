@@ -1,90 +1,37 @@
 import { useContext, useEffect, useState } from "react";
 // import AuthContext from "../../context/AuthContext";
 import UserImg from "../assets/User.png";
-import ProfileHook from "../../context/ProfileHook";
 import AuthContext from "../../context/AuthContext";
 import axios from "../axios";
 import { useNavigate } from "react-router-dom";
 import EventBoard from "../components/EventBoard";
 import Loading from "../components/Loading";
-
-const states = [
-  { code: "AL", name: "Alabama" },
-  { code: "AK", name: "Alaska" },
-  { code: "AZ", name: "Arizona" },
-  { code: "AR", name: "Arkansas" },
-  { code: "CA", name: "California" },
-  { code: "CO", name: "Colorado" },
-  { code: "CT", name: "Connecticut" },
-  { code: "DE", name: "Delaware" },
-  { code: "FL", name: "Florida" },
-  { code: "GA", name: "Georgia" },
-  { code: "HI", name: "Hawaii" },
-  { code: "ID", name: "Idaho" },
-  { code: "IL", name: "Illinois" },
-  { code: "IN", name: "Indiana" },
-  { code: "IA", name: "Iowa" },
-  { code: "KS", name: "Kansas" },
-  { code: "KY", name: "Kentucky" },
-  { code: "LA", name: "Louisiana" },
-  { code: "ME", name: "Maine" },
-  { code: "MD", name: "Maryland" },
-  { code: "MA", name: "Massachusetts" },
-  { code: "MI", name: "Michigan" },
-  { code: "MN", name: "Minnesota" },
-  { code: "MS", name: "Mississippi" },
-  { code: "MO", name: "Missouri" },
-  { code: "MT", name: "Montana" },
-  { code: "NE", name: "Nebraska" },
-  { code: "NV", name: "Nevada" },
-  { code: "NH", name: "New Hampshire" },
-  { code: "NJ", name: "New Jersey" },
-  { code: "NM", name: "New Mexico" },
-  { code: "NY", name: "New York" },
-  { code: "NC", name: "North Carolina" },
-  { code: "ND", name: "North Dakota" },
-  { code: "OH", name: "Ohio" },
-  { code: "OK", name: "Oklahoma" },
-  { code: "OR", name: "Oregon" },
-  { code: "PA", name: "Pennsylvania" },
-  { code: "RI", name: "Rhode Island" },
-  { code: "SC", name: "South Carolina" },
-  { code: "SD", name: "South Dakota" },
-  { code: "TN", name: "Tennessee" },
-  { code: "TX", name: "Texas" },
-  { code: "UT", name: "Utah" },
-  { code: "VT", name: "Vermont" },
-  { code: "VA", name: "Virginia" },
-  { code: "WA", name: "Washington" },
-  { code: "WV", name: "West Virginia" },
-  { code: "WI", name: "Wisconsin" },
-  { code: "WY", name: "Wyoming" },
-  { code: "DC", name: "District of Columbia" },
-  { code: "PR", name: "Puerto Rico" },
-];
+import states from "../utils/states";
+import { useSkill } from "../../context/SkillContext";
 
 const Profile = () => {
   const { authTokens } = useContext(AuthContext);
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState({
+    fullname: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    preferences: "",
+    skills: [],
+    availability: [],
+    events: [],
+  });
   // const [profileLoaded, setProfileLoaded] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [address1, setAddress1] = useState("");
-  const [address2, setAddress2] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [preferences, setPreferences] = useState("");
-  const [skills, setSkills] = useState([]);
-  const [availability, setAvailability] = useState([]);
-  const [events, setEvents] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSkill, setSelectedSkill] = useState({ id: null, name: "" });
 
   const [activeTab, setActiveTab] = useState("profile");
 
-  const [allSkills, setAllSkills] = useState([]);
-
+  const { allSkills } = useSkill();
   const [isEditing, setIsEditing] = useState(false);
 
   const navigate = useNavigate();
@@ -107,46 +54,17 @@ const Profile = () => {
 
   useEffect(() => {
     if (!isLoading && profile) {
-      setFullName(profile.fullname || "");
-      setAddress1(profile.address1 || "");
-      setAddress2(profile.address2 || "");
-      setCity(profile.city || "");
-      setState(profile.state || "");
-      setZipCode(profile.zipcode || "");
-      setPreferences(profile.preferences || "");
-      setSkills(profile.skills || []);
-      setAvailability(profile.availability || []);
-      setEvents(profile.events || []);
+      setProfile(profile);
     }
   }, [profile, isLoading]);
 
-  useEffect(() => {
-    const getSkills = async () => {
-      const response = await axios({
-        method: "GET",
-        url: "/skill/",
-      });
-      setAllSkills(response.data);
-    };
-    getSkills();
-  }, []);
-
   const handleSubmit = async () => {
     try {
+      profile.skill_ids = profile.skills.map((skill) => skill.id);
       await axios({
         method: "PATCH",
         url: `/user/profile/`,
-        data: {
-          fullname: fullName,
-          address1: address1,
-          address2: address2,
-          city: city,
-          state: state,
-          zipcode: zipCode,
-          preference: preferences,
-          skill_ids: skills.map((s) => s.id),
-          availability: availability,
-        },
+        data: profile,
       });
       alert("Profile updated successfully!");
       window.location.reload();
@@ -156,29 +74,37 @@ const Profile = () => {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleAddDate = () => {
     if (selectedDate) {
       console.log(selectedDate);
-      setAvailability([...availability, selectedDate]);
+      setProfile((prev) => ({ ...prev, availability: [...prev.availability, selectedDate] }));
       setSelectedDate("");
     }
   };
 
   const handleRemoveDate = (index) => {
     console.log(index);
-    setAvailability(availability.filter((date, i) => i !== index));
+    setProfile((prev) => ({ ...prev, availability: prev.availability.filter((d, i) => i != index) }));
   };
 
   const handleAddSkill = () => {
-    if (selectedSkill && !skills.some((el) => el.id === selectedSkill.id)) {
+    if (selectedSkill && !profile.skills.some((el) => el.id === selectedSkill.id)) {
       console.log(selectedSkill);
-      setSkills([...skills, selectedSkill]);
+      setProfile((prev) => ({
+        ...prev,
+        skills: [...prev.skills, selectedSkill],
+      }));
     }
     setSelectedSkill("");
   };
 
-  const handleRemoveSkill = (index) => {
-    setSkills(skills.filter((skill) => skill.id !== index));
+  const handleRemoveSkill = (id) => {
+    setProfile((prev) => ({ ...prev, skills: prev.skill.filter((s) => s.id != id) }));
   };
 
   const handleCancel = () => {
@@ -218,8 +144,9 @@ const Profile = () => {
                     <input
                       type="text"
                       disabled={isEditing ? false : true}
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
+                      name="fullname"
+                      value={profile.fullname}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -228,8 +155,9 @@ const Profile = () => {
                     <input
                       type="text"
                       disabled={isEditing ? false : true}
-                      value={address1}
-                      onChange={(e) => setAddress1(e.target.value)}
+                      name="address1"
+                      value={profile.address1}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -238,8 +166,9 @@ const Profile = () => {
                     <input
                       type="text"
                       disabled={isEditing ? false : true}
-                      value={address2}
-                      onChange={(e) => setAddress2(e.target.value)}
+                      name="address2"
+                      value={profile.address2}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -248,8 +177,9 @@ const Profile = () => {
                     <input
                       type="text"
                       disabled={isEditing ? false : true}
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
+                      name="city"
+                      value={profile.city}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -258,8 +188,9 @@ const Profile = () => {
                     <input
                       type="text"
                       disabled={isEditing ? false : true}
-                      value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
+                      name="zipcode"
+                      value={profile.zipcode}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -267,8 +198,9 @@ const Profile = () => {
                     <label className="block font-bold text-sm mb-0 mr-2 w-1/6 ">State:</label>
                     <select
                       disabled={isEditing ? false : true}
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
+                      name="state"
+                      value={profile.state}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     >
                       <option value="">Select a state</option>
@@ -287,8 +219,9 @@ const Profile = () => {
                     <textarea
                       id="preferences"
                       disabled={isEditing ? false : true}
-                      value={preferences}
-                      onChange={(e) => setPreferences(e.target.value)}
+                      name="preferences"
+                      value={profile.preferences}
+                      onChange={handleInputChange}
                       className="flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
                   </div>
@@ -296,7 +229,7 @@ const Profile = () => {
                   <div className="mb-4 flex items-center">
                     <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Skills:</label>
                     <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                      {skills.map((el) => {
+                      {profile.skills.map((el) => {
                         return (
                           <div className="border flex rounded p-2 bg-teal-600 text-white" key={el.id}>
                             {el.name}
@@ -343,7 +276,7 @@ const Profile = () => {
                   <div className="mb-4 flex items-center">
                     <label className="block font-bold text-sm mb-0 mr-2 w-1/6">Current Availability:</label>
                     <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                      {availability.map((el, i) => {
+                      {profile.availability.map((el, i) => {
                         return (
                           <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
                             {el}
@@ -410,7 +343,7 @@ const Profile = () => {
                 </div>
               </>
             ) : (
-              <EventBoard events={events} />
+              <EventBoard events={profile.events} />
             )}
           </div>
         )}

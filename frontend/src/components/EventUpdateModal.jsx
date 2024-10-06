@@ -1,107 +1,65 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "react-datepicker/dist/react-datepicker.css";
-import axios from "../axios";
-import Loading from "../components/Loading";
 import states from "../utils/states";
+import Loading from "./Loading";
 import { useSkill } from "../../context/SkillContext";
 
-const EventForm = () => {
-  const navigate = useNavigate();
-  const { allSkills } = useSkill();
-  const [eventData, setEventData] = useState({
-    name: "",
-    description: "",
-    address: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    urgency: "",
-    skills_needed: [],
-    time: "",
-    date: "",
-  });
-
-  const [newSkill, setNewSkill] = useState("");
+const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
+  const [eventData, setEventData] = useState(event);
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [newSkill, setNewSkill] = useState(null);
+  const { allSkills } = useSkill();
 
-  // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEventData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: !value }));
+    setEventData({ ...eventData, [e.target.name]: e.target.value });
   };
 
-  // Add skill
   const handleAddSkill = () => {
-    if (newSkill && !eventData.skills_needed.some((el) => el.id === newSkill.id)) {
-      setEventData((prevData) => ({
-        ...prevData,
-        skills_needed: [...prevData.skills_needed, newSkill],
-      }));
-      setNewSkill("");
+    if (newSkill && !eventData.skills_needed.some((skill) => skill.id === newSkill.id)) {
+      setEventData({
+        ...eventData,
+        skills_needed: [...eventData.skills_needed, newSkill],
+      });
     }
+    setNewSkill("");
   };
 
-  // Remove skill
   const handleRemoveSkill = (id) => {
-    setEventData((prevData) => ({
-      ...prevData,
-      skills_needed: prevData.skills_needed.filter((skill) => skill.id !== id),
-    }));
+    setEventData({
+      ...eventData,
+      skills_needed: eventData.skills_needed.filter((skill) => skill.id !== id),
+    });
   };
 
-  // Add availability date
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(eventData));
+    // Validation
+    const newErrors = {};
+    if (!eventData.name) newErrors.name = "Event name is required";
+    if (!eventData.description) newErrors.description = "Event description is required";
+    if (!eventData.address) newErrors.address = "Address is required";
+    // Add other field validations as necessary
 
-    eventData.skill_ids = eventData.skills_needed.map((skill) => skill.id);
-    const hasErrors = validateForm();
-    if (!hasErrors) {
-      try {
-        const response = await axios({
-          method: "POST",
-          url: "/event/create/",
-          data: eventData,
-        });
-        console.log(response);
-        alert("Successfully create event");
-        setTimeout(() => {
-          navigate("/event");
-        }, 2000);
-      } catch (error) {
-        console.log(error);
-      }
+    if (Object.keys(newErrors).length === 0) {
+      onUpdate(eventData);
     } else {
-      console.log("Error: Invalid input");
+      setErrors(newErrors);
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    Object.keys(eventData).forEach((key) => {
-      if (!eventData[key] && key !== "skills_needed" && key !== "availabilityDates") {
-        newErrors[key] = true;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length > 0;
-  };
+  if (!isOpen) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-screen bg-gray-100 p-8">
-      <div className="w-full max-w-lg bg-white shadow-md p-6 rounded-md">
-        <h1 className="text-2xl font-bold text-teal-600 mb-6 mx-auto">Create Event</h1>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2 justify-center ">
+    <div className="fixed inset-0 flex items-center justify-center w-full min-h-screen bg-gray-900 bg-opacity-50 p-8">
+      <div className="w-full max-w-lg bg-white shadow-md rounded-md relative overflow-hidden">
+        {/* Modal Header */}
+        <div className="flex justify-between items-center p-4 bg-teal-600 text-white">
+          <h1 className="text-2xl font-bold">Update Event</h1>
+          <button onClick={onClose} className="text-xl hover:bg-teal-700 rounded-full ">
+            <i className="bx bx-x"></i>
+          </button>
+        </div>
+        <div className="max-h-[70vh] overflow-y-auto p-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 justify-center">
             {/* Event Name Input */}
             <div>
               <label className="block text-gray-700 font-semibold">Event Name</label>
@@ -162,6 +120,7 @@ const EventForm = () => {
               </select>
             </div>
 
+            {/* Event Zipcode */}
             <div>
               <label className="block text-gray-700 font-semibold">Zipcode</label>
               <input
@@ -217,13 +176,11 @@ const EventForm = () => {
                   <option value="" disabled>
                     Select a skill
                   </option>
-                  {allSkills.map((skill) => {
-                    return (
-                      <option key={skill.id} value={skill.id}>
-                        {skill.name}
-                      </option>
-                    );
-                  })}
+                  {allSkills.map((skill) => (
+                    <option key={skill.id} value={skill.id}>
+                      {skill.name}
+                    </option>
+                  ))}
                 </select>
 
                 <button type="button" onClick={handleAddSkill} className="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">
@@ -232,39 +189,45 @@ const EventForm = () => {
               </div>
             </div>
 
+            {/* Date and Time */}
             <div className="flex gap-2 justify-between">
               <div className="w-full">
-                <label className="text-gray-700 font-semibold">Time </label>
+                <label className="text-gray-700 font-semibold">Time</label>
                 <input
                   type="time"
                   name="time"
-                  step="1" // Enables seconds input without AM/PM
+                  step="1"
                   value={eventData.time}
                   onChange={handleInputChange}
-                  placeholder="HH:MM:SS" // Placeholder to guide the user
-                  className={`  w-full p-2 border-2 rounded-md ${errors.time ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full p-2 border-2 rounded-md ${errors.time ? "border-red-500" : "border-gray-300"}`}
                 />
               </div>
 
               <div className="w-full">
-                <label className=" text-gray-700 font-semibold">Date</label>
-                <input type="date" name="date" onChange={handleInputChange} className="w-full p-2 border-2 border-gray-300 rounded-md" />
+                <label className="text-gray-700 font-semibold">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={eventData.date}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border-2 border-gray-300 rounded-md"
+                />
               </div>
             </div>
-
-            <div className="flex justify-end space-x-4">
-              <button type="button" onClick={() => navigate("/cancel")} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
-                Cancel
-              </button>
-              <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">
-                Save Changes
-              </button>
-            </div>
           </form>
-        )}
+        </div>
+        {/* Modal Footer */}
+        <div className="flex justify-end p-4 bg-gray-100 border-t border-gray-200">
+          <button type="button" onClick={onClose} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
+            Cancel
+          </button>
+          <button type="button" onClick={handleSubmit} className="ml-4 bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">
+            Save Changes
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default EventForm;
+export default EventUpdateModal;

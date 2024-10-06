@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import axios from "../src/axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";

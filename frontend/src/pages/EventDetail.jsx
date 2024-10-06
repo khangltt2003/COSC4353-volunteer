@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "../axios";
 import Loading from "../components/Loading";
+import EventUpdateModal from "../components/EventUpdateModal";
+import AuthContext from "../../context/AuthContext";
 
 const EventDetail = () => {
   const { id } = useParams();
-  const [event, setEvent] = useState();
+  const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getEvent = async () => {
       const response = await axios({
@@ -23,19 +29,59 @@ const EventDetail = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const handleUpdateEvent = async (updatedEvent) => {
+    try {
+      updatedEvent.skill_ids = updatedEvent.skills_needed.map((skill) => skill.id);
+      await axios({
+        method: "PUT",
+        url: `/event/${id}/`,
+        data: updatedEvent,
+      });
+      setIsUpdateModalOpen(false);
+      alert("Successfully updated event");
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `/event/${id}/`,
+      });
+      alert("Successfully deleted event");
+      navigate("/event");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="h-[70px]"></div>
-      <div className="max-w-4xl w-full  bg-white shadow-lg rounded-lg p-8 mx-auto">
+      <div className="h-[50px]"></div>
+      <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-8 mx-auto">
         {isLoading ? (
           <Loading />
         ) : (
-          <>
-            <h1 className="text-4xl font-bold text-teal-600 mb-4">{event.name}</h1>
+          <div className="relative">
+            {user && user.is_staff && (
+              <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
+                <button className="bg-teal-600 p-2 text-white rounded hover:bg-teal-700" onClick={() => setIsUpdateModalOpen(true)}>
+                  Update
+                </button>
+                <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleDelete}>
+                  Delete
+                </button>
+              </div>
+            )}
+
+            <h1 className="text-3xl md:text-4xl font-bold text-teal-600 mb-4">{event.name}</h1>
             <p className="text-gray-700 mb-6">{event.description}</p>
 
             <div className="mb-4">
-              <h2 className="text-2xl font-semibold text-teal-600 mb-2">Event Details</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-teal-600 mb-2">Event Details</h2>
               <p className="text-gray-600">
                 <strong>Address:</strong> {event.address}, {event.city}, {event.state} {event.zipcode}
               </p>
@@ -51,7 +97,7 @@ const EventDetail = () => {
             </div>
 
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-teal-600 mb-2">Skills Needed</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-teal-600 mb-2">Skills Needed</h2>
               <ul className="list-disc list-inside text-gray-700">
                 {event.skills_needed.length === 0 ? (
                   <p>This event does not require any specific skills.</p>
@@ -64,9 +110,12 @@ const EventDetail = () => {
             <div className="mt-6">
               <button className="bg-teal-600 text-white px-4 py-2 rounded shadow-md hover:bg-teal-700 transition">Apply</button>
             </div>
-          </>
+          </div>
         )}
       </div>
+      {!isLoading && (
+        <EventUpdateModal event={event} isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onUpdate={handleUpdateEvent} />
+      )}
     </div>
   );
 };

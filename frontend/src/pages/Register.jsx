@@ -9,7 +9,7 @@ import axios from "../axios";
 import { useNavigate } from "react-router-dom";
 import PasswordChecklist from "react-password-checklist";
 
-export default function Login2() {
+export default function Register() {
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",

@@ -97,17 +97,17 @@ def create_event(request):
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PATCH', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny]) 
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.method == 'GET':
         serializer = EventSerializer(event)
         return Response(serializer.data)
-    elif request.method == 'PATCH':
+      
+    elif request.method == 'PUT':
         if not request.user.is_staff:
             return Response({'detail': 'Permission denied. Admin access required.'}, status=status.HTTP_403_FORBIDDEN)
-        
         serializer = EventSerializer(event, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
