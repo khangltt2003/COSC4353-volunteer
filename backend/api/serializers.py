@@ -23,9 +23,10 @@ class MinimalProfileSerializer(serializers.ModelSerializer):
     fields = ["id","fullname"]
 
 class MinimalEventSerializer(serializers.ModelSerializer):
+  skills_needed = SkillSerializer(many= True, read_only = True)
   class Meta:
     model = Event
-    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency"]
+    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "skills_needed"]
 
 
 class EventSerializer(serializers.ModelSerializer):

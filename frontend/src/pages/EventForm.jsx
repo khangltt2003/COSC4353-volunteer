@@ -24,7 +24,7 @@ const EventForm = () => {
 
   const [newSkill, setNewSkill] = useState("");
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle input changes
   const handleInputChange = (e) => {

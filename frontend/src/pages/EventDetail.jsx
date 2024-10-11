@@ -86,6 +86,19 @@ const EventDetail = () => {
     }
   };
 
+  const handleWithdraw = async () => {
+    try {
+      await axios({
+        method: "PUT",
+        url: `/event/${id}/leave/`,
+      });
+      alert("successfully withdraw from event");
+      window.location.reload();
+    } catch (err) {
+      console.log("cannot withdraw from event", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="h-[50px]"></div>
@@ -102,6 +115,14 @@ const EventDetail = () => {
                 </button>
                 <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleDelete}>
                   Delete
+                </button>
+              </div>
+            )}
+            {/* for applicants and participants */}
+            {(isApplied || isJoined) && (
+              <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
+                <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleWithdraw}>
+                  Withdraw
                 </button>
               </div>
             )}
@@ -137,12 +158,15 @@ const EventDetail = () => {
             </div>
 
             <div className="mt-6">
-              {!isApplied ? (
+              {!isApplied && !isJoined ? (
                 <button onClick={() => handleApply()} className="bg-teal-600 text-white px-4 py-2 rounded shadow-md hover:bg-teal-700 transition">
                   Apply
                 </button>
               ) : (
-                <button className="bg-while border border-teal-600 text-teal-600 px-4 py-2 rounded shadow-md ">Applied</button>
+                <>
+                  {isApplied && <button className="bg-while border border-teal-600 text-teal-600 px-4 py-2 rounded shadow-md ">Applied</button>}
+                  {isJoined && <button className="bg-while border border-teal-600 text-teal-600 px-4 py-2 rounded shadow-md ">Joined</button>}
+                </>
               )}
             </div>
           </div>
