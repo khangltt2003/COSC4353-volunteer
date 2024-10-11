@@ -24,7 +24,7 @@ const EventForm = () => {
 
   const [newSkill, setNewSkill] = useState("");
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -59,18 +59,18 @@ const EventForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(eventData));
-
     eventData.skill_ids = eventData.skills_needed.map((skill) => skill.id);
     const hasErrors = validateForm();
     if (!hasErrors) {
       try {
+        setIsLoading(true);
         const response = await axios({
           method: "POST",
           url: "/event/create/",
           data: eventData,
         });
         console.log(response);
+        setIsLoading(false);
         alert("Successfully create event");
         setTimeout(() => {
           navigate("/event");

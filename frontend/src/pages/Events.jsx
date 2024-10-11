@@ -32,17 +32,15 @@ const Events = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center relative px-4">
-      {user && user.is_staff && (
-        <Link to="/createevent">
-          <button className="bg-teal-600 absolute top-3 right-4 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition">Create Event</button>
-        </Link>
-      )}
-
-      <div className="w-full flex items-center justify-center text-teal-600 my-10">
+      <div className="w-full flex items-center justify-center text-teal-600 my-10 relative">
         <p className="text-3xl sm:text-4xl md:text-5xl font-bold">Volunteer Events</p>
+        {user && user.is_staff && (
+          <Link to="/createevent">
+            <button className="bg-teal-600 absolute top-0 right-0 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition">Create Event</button>
+          </Link>
+        )}
       </div>
-
-      <div className="w-full max-w-2xl sm:w-3/4 md:w-2/3">
+      <div className="w-full max-w-6xl ">
         <input
           type="text"
           placeholder="Search events..."
@@ -53,7 +51,7 @@ const Events = () => {
         {isLoading ? (
           <Loading />
         ) : (
-          <div className="flex flex-col gap-6 py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6 w-full">
             {filteredEvents.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}

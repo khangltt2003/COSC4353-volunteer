@@ -26,6 +26,28 @@ export default function Register() {
     return re.test(String(email).toLowerCase());
   };
 
+  const isValidPassword = (password) => {
+    if (password.length <= 8) {
+      return false;
+    }
+    //check special character
+    const specialCharacterPattern = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!specialCharacterPattern.test(password)) {
+      return false;
+    }
+    //check one number
+    const numberPattern = /[0-9]/;
+    if (!numberPattern.test(password)) {
+      return false;
+    }
+    //check one capitalized character
+    const capitalLetterPattern = /[A-Z]/;
+    if (!capitalLetterPattern.test(password)) {
+      return false;
+    }
+    return true;
+  };
+
   const handleChage = (e) => {
     setError(null);
     const { name, value } = e.target;
@@ -39,13 +61,18 @@ export default function Register() {
       return;
     }
 
+    if (!isValidPassword(data.password)) {
+      return;
+    }
+
     if (data.password != data.password2) {
       setError("Password does not match.");
       return;
     }
     try {
-      const response = await axios.post({
-        url: import.meta.env.VITE_SERVER_URL + "/user/register/",
+      await axios({
+        method: "POST",
+        url: "/user/register/",
         data: {
           email: data.email,
           password: data.password,

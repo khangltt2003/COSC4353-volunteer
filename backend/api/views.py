@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import UserProfile, Event, Skill
-from .serializers import UserSerializer, UserProfileSerializer, EventSerializer, UserRegistrationSerializer, SkillSerializer
+from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -84,7 +84,7 @@ def user_profile(request):
 def get_events(request):
   if request.method == "GET":
     events = Event.objects.all()
-    serializer = EventSerializer(events, many = True)
+    serializer = MinimalEventSerializer(events, many = True)
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -102,7 +102,7 @@ def create_event(request):
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.method == 'GET':
-        serializer = EventSerializer(event)
+        serializer = EventSerializer(event, context = {"request": request})
         return Response(serializer.data)
       
     elif request.method == 'PUT':
@@ -127,31 +127,40 @@ def view_all_skill(request):
     serializer = SkillSerializer(skills, many = True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-#join event
+#apply event
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def join_event(request, event_id):
+def apply_event(request, event_id):
   event = get_object_or_404(Event, id=event_id)
-  profile = request.user.userprofile
+  profile = request.user.user_profile
+  if profile not in event.participants.all() and profile not in event.applicants.all():
+    event.applicants.add(profile)
+    event.save()
+    return Response({'status': 'applied'}, status=status.HTTP_200_OK)
+  return Response({'error': 'Unable to apply'}, status=status.HTTP_400_BAD_REQUEST)
 
-  if request.method == 'POST':
-    if profile not in event.participants.all() and event.available_slots > 0:
-      event.participants.add(profile)
-      event.available_slots -= 1
-      event.save()
-      return Response({'status': 'participated'}, status=status.HTTP_200_OK)
-    return Response({'error': 'Unable to participate'}, status=status.HTTP_400_BAD_REQUEST)
-
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def join_event(request, event_id):
+  event = get_object_or_404(event_id)
+  profile = request.user.user_profile
+  if profile in event.applicants.all() and  profile not in event.particiapants.all():
+    event.participants.add(profile)
+    event.applicants.remove(profile)
+    event.save()
+    return Response({'status': 'joined'}, status=status.HTTP_200_OK)
+  return Response({'error': 'Unable to join'}, status=status.HTTP_400_BAD_REQUEST)
+  
+  
 #leave event
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def leave_event(request, event_id):
   event = get_object_or_404(Event, id=event_id)
-  profile = request.user.userprofile
-  if request.method == 'POST':
+  profile = request.user.user_profile
+  if request.method == 'PUT':
     if profile in event.participants.all():
       event.participants.remove(profile)
-      event.available_slots += 1
       event.save()
       return Response({'status': 'left'}, status=status.HTTP_200_OK)
     return Response({'error': 'Unable to leave'}, status=status.HTTP_400_BAD_REQUEST)

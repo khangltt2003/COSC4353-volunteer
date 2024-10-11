@@ -16,16 +16,42 @@ class SkillSerializer(serializers.ModelSerializer):
     model = Skill
     fields = "__all__"
 
+
+class MinimalProfileSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = UserProfile
+    fields = ["id","fullname"]
+
+class MinimalEventSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Event
+    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency"]
+
+
 class EventSerializer(serializers.ModelSerializer):
+    #for getting
     skills_needed = SkillSerializer(many=True, read_only = True)
+    participants = MinimalProfileSerializer(many=True, read_only=True)
+    applicants = MinimalProfileSerializer(many=True, read_only=True)
+    #for updating
     skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
+    participant_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True) 
+    applicants_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True) 
     class Meta:
         model = Event
         fields = "__all__"
     
+    #only show participants for admin's request
+    def to_representation(self, instance):
+      representation = super().to_representation(instance)
+      request = self.context.get("request")
+      if request and not request.user.is_staff:
+        representation.pop("participants", None)
+        representation.pop("applicants", None)
+      return representation
+
     def create(self, validated_data):
       skills_data = validated_data.pop('skill_ids', None)
-
       event = Event.objects.create(**validated_data)
 
       if skills_data is not None:
@@ -35,7 +61,6 @@ class EventSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
       skills_data = validated_data.pop('skill_ids', None)
-
       instance.name = validated_data.get('name', instance.name)
       instance.description = validated_data.get('description', instance.description)
       instance.address = validated_data.get('address', instance.address)
@@ -45,7 +70,6 @@ class EventSerializer(serializers.ModelSerializer):
       instance.date = validated_data.get('date', instance.date)
       instance.time = validated_data.get('time', instance.time)
       instance.urgency = validated_data.get('urgency', instance.urgency)
-
 
       if skills_data is not None:
           instance.skills_needed.set(skills_data)
@@ -98,16 +122,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       except IntegrityError:
         raise serializers.ValidationError("This email is already in use.")
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    events = EventSerializer(many=True, read_only=True)
+    joined_events = MinimalEventSerializer(many=True, read_only=True) 
+    applied_events = MinimalEventSerializer(many= True, read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
     
     event_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all(), write_only = True)
     skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
-    
-    
     class Meta:
         model = UserProfile
         fields = "__all__"
@@ -127,11 +149,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
       
       if events_data is not None:
-          instance.events.set(events_data)  
+          instance.joined_events.set(events_data)  
 
       if skills_data is not None:
           instance.skills.set(skills_data)
       instance.save()
 
       return instance
-

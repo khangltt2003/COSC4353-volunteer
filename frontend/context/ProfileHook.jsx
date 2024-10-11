@@ -7,34 +7,27 @@ const ProfileHook = () => {
   const [profile, setProfile] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
 
+  const getProfile = async () => {
+    try {
+      let response = await axios({
+        method: "GET",
+        url: `/user/profile/`,
+        headers: {
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      });
+      setProfile(response.data);
+      setProfileLoaded(true); // Indicates the profile fetch attempt was made
+    } catch (error) {
+      console.error("Cannot get user profile", error);
+    }
+  };
+
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        let response = await axios({
-          method: "GET",
-          url: `${import.meta.env.REACT_APP_API_BASE_URL}/user/profile/`,
-          headers: {
-            Authorization: "Bearer " + String(authTokens.access),
-          },
-        });
-
-        if (response.status === 200) {
-          let data = await response.json();
-          setProfile(data);
-        } else if (response.status === 401) {
-          logoutUser();
-        }
-        setProfileLoaded(true); // Indicates the profile fetch attempt was made
-      } catch (error) {
-        console.error("An error occurred while fetching the profile:", error);
-        setProfileLoaded(true);
-      }
-    };
-
     if (authTokens) {
       getProfile();
     }
-  }, [authTokens, logoutUser]);
+  }, [authTokens]);
 
   return { profile, profileLoaded };
 };

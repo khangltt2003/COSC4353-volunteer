@@ -37,7 +37,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
     if (!eventData.name) newErrors.name = "Event name is required";
     if (!eventData.description) newErrors.description = "Event description is required";
     if (!eventData.address) newErrors.address = "Address is required";
-    // Add other field validations as necessary
 
     if (Object.keys(newErrors).length === 0) {
       onUpdate(eventData);
@@ -51,7 +50,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center w-full min-h-screen bg-gray-900 bg-opacity-50 p-8">
       <div className="w-full max-w-lg bg-white shadow-md rounded-md relative overflow-hidden">
-        {/* Modal Header */}
         <div className="flex justify-between items-center p-4 bg-teal-600 text-white">
           <h1 className="text-2xl font-bold">Update Event</h1>
           <button onClick={onClose} className="text-xl hover:bg-teal-700 rounded-full ">
@@ -60,7 +58,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
         </div>
         <div className="max-h-[70vh] overflow-y-auto p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 justify-center">
-            {/* Event Name Input */}
             <div>
               <label className="block text-gray-700 font-semibold">Event Name</label>
               <input
@@ -72,7 +69,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Event Description */}
             <div>
               <label className="block text-gray-700 font-semibold">Event Description</label>
               <textarea
@@ -83,7 +79,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Event Address */}
             <div>
               <label className="block text-gray-700 font-semibold">Address</label>
               <input
@@ -95,7 +90,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Event City */}
             <div>
               <label className="block text-gray-700 font-semibold">City</label>
               <input
@@ -107,7 +101,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Event State */}
             <div>
               <label className="block text-gray-700 font-semibold">State</label>
               <select value={eventData.state} name="state" onChange={handleInputChange} className="mt-1 block w-full p-2 border-2 rounded-md">
@@ -120,7 +113,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               </select>
             </div>
 
-            {/* Event Zipcode */}
             <div>
               <label className="block text-gray-700 font-semibold">Zipcode</label>
               <input
@@ -132,7 +124,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Urgency Dropdown */}
             <div>
               <label className="block text-gray-700 font-semibold">Urgency</label>
               <select
@@ -149,8 +140,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
                 <option value="low">Low</option>
               </select>
             </div>
-
-            {/* Skills Needed */}
             <div>
               <label className="block text-gray-700 font-semibold">Skills:</label>
               <div className="flex flex-wrap gap-2 mb-2">
@@ -189,7 +178,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
               </div>
             </div>
 
-            {/* Date and Time */}
             <div className="flex gap-2 justify-between">
               <div className="w-full">
                 <label className="text-gray-700 font-semibold">Time</label>
@@ -216,7 +204,6 @@ const EventUpdateModal = ({ event, isOpen, onClose, onUpdate }) => {
             </div>
           </form>
         </div>
-        {/* Modal Footer */}
         <div className="flex justify-end p-4 bg-gray-100 border-t border-gray-200">
           <button type="button" onClick={onClose} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
             Cancel

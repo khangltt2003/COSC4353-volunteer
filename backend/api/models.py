@@ -61,8 +61,8 @@ class UserProfile(models.Model):
     skills = models.ManyToManyField(Skill, blank=True, related_name='user_profile')  
     preference = models.TextField(blank=True)
     availability = ArrayField(models.DateField(), default=list, blank=True)
-    events = models.ManyToManyField(Event, blank=True, related_name='participants')
-    
+    joined_events = models.ManyToManyField(Event, blank=True, related_name='participants')
+    applied_events = models.ManyToManyField(Event, blank =True, related_name="applicants")
     def __str__(self):
         return f'{self.user.username} Profile'
 

@@ -4,14 +4,18 @@ import axios from "../axios";
 import Loading from "../components/Loading";
 import EventUpdateModal from "../components/EventUpdateModal";
 import AuthContext from "../../context/AuthContext";
+import ProfileHook from "../../context/ProfileHook";
 
 const EventDetail = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
+  const [isJoined, setIsJoined] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { profile, profileLoaded } = ProfileHook();
 
   useEffect(() => {
     const getEvent = async () => {
@@ -26,8 +30,32 @@ const EventDetail = () => {
   }, [id]);
 
   useEffect(() => {
+    if (profileLoaded && profile.applied_events.some((event) => event.id === Number(id))) {
+      setIsApplied(true);
+      return;
+    }
+    if (profileLoaded && profile.joined_events.some((event) => event.id === Number(id))) {
+      setIsJoined(true);
+      return;
+    }
+  }, [id, profile, profileLoaded]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleApply = async () => {
+    try {
+      await axios({
+        method: "PUT",
+        url: `/event/${id}/apply/`,
+      });
+      alert("successfully applied");
+      window.location.reload();
+    } catch (err) {
+      console.log(("cannot apply", err));
+    }
+  };
 
   const handleUpdateEvent = async (updatedEvent) => {
     try {
@@ -66,6 +94,7 @@ const EventDetail = () => {
           <Loading />
         ) : (
           <div className="relative">
+            {/* only for admin */}
             {user && user.is_staff && (
               <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
                 <button className="bg-teal-600 p-2 text-white rounded hover:bg-teal-700" onClick={() => setIsUpdateModalOpen(true)}>
@@ -108,7 +137,13 @@ const EventDetail = () => {
             </div>
 
             <div className="mt-6">
-              <button className="bg-teal-600 text-white px-4 py-2 rounded shadow-md hover:bg-teal-700 transition">Apply</button>
+              {!isApplied ? (
+                <button onClick={() => handleApply()} className="bg-teal-600 text-white px-4 py-2 rounded shadow-md hover:bg-teal-700 transition">
+                  Apply
+                </button>
+              ) : (
+                <button className="bg-while border border-teal-600 text-teal-600 px-4 py-2 rounded shadow-md ">Applied</button>
+              )}
             </div>
           </div>
         )}
