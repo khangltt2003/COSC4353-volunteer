@@ -23,7 +23,7 @@ Open your browser and go to [http://localhost:5173](http://localhost:5173).
 
 ## Backend Setup
 
-### Step 1: Navigate to the Backend
+**Step 1: Navigate to the Backend**
 Open another terminal in Visual Studio Code. If you're currently in the frontend, navigate to the backend by running:
 
 ```bash
@@ -35,7 +35,7 @@ Ensure all necessary packages are installed by running:
 pip install -r requirements.txt
 ```
 
-***Step 3: Start the Backend Server***
+**Step 3: Start the Backend Server**
 Run the backend development server:
 ```bash
 python manage.py runserver
