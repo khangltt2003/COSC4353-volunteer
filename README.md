@@ -29,7 +29,7 @@ Open another terminal in Visual Studio Code. If you're currently in the frontend
 ```bash
 cd backend
 ```
-**Step 2: Install Dependencies***
+**Step 2: Install Dependencies**
 Ensure all necessary packages are installed by running:
 ```bash
 pip install -r requirements.txt
