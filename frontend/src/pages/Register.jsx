@@ -98,17 +98,15 @@ export default function Register() {
           <img className=" relative w-24 h-24 rounded-full object-cover" src={LogoImg} alt="Logo" />
         </button>
       </Link>
-      {/* <div className="absolute inset-0 flex justify-center items-center">
-        <div className="bg-cyan-700 rounded-lg blur-lg shadow-xl w-full max-w-[505px] h-full max-h-[705px]" />
-      </div> */}
+
       <div className="relative flex justify-center items-center min-h-screen ">
         <form
           className="form-large-text  lg:w-[30%] sm:max-w-[55%] w-full max-h-[90%]  sm:max-h-[70%] h-[70%] mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-slate-800 shadow-2xl"
           onSubmit={handleSubmit}
         >
-          <h1 className=" text-5xl text-main font-bold text-center mb-3 ">TALKConnect</h1>
+          <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
           <div className="relative mb-2">
-            <label className="flex flex-col sm:text-lg ">Email</label>
+            <label className="flex flex-col sm:text-lg py-2">Email</label>
             <div className="relative">
               <input
                 className="w-full border p-2 rounded-lg"

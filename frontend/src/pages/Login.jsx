@@ -62,8 +62,8 @@ export default function Login() {
         >
           <h1 className="text-1xl sm:text-2xl md:text-4xl text-main font-bold text-center mb-5  mt-2 sm:mt-8">TALKConnect</h1>
 
-          <div className="relative mb-2">
-            <label className="flex flex-col py-2 text-base ">Email</label>
+          <div className="mb-3">
+            <label className="py-2">Email</label>
             <div className="relative">
               <input
                 className="w-full border p-2 rounded-lg "
@@ -77,8 +77,8 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="relative mb-4">
-            <label className="flex flex-col py-2 ">Password</label>
+          <div className="mb-3">
+            <label className="py-2 ">Password</label>
             <div className="relative mb-2">
               <input
                 className="w-full border p-2 rounded-lg  "

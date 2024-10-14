@@ -49,9 +49,9 @@ def view_all_user(request):
 @api_view(["GET", "DELETE"])
 @permission_classes([IsAdminUser])
 def user_detail(request, user_id):
-  user  = get_object_or_404(User, pk=user_id)
+  user  = get_object_or_404(UserProfile, pk=user_id)
   if request.method == "GET":
-    serializer = UserProfileSerializer(user.user_profile)
+    serializer = UserProfileSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
     
   if request.method == "DELETE":
@@ -83,6 +83,13 @@ def user_profile(request):
 def get_events(request):
   events = Event.objects.all()
   serializer = MinimalEventSerializer(events, many = True)
+  return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def get_events2(request):
+  events = Event.objects.all()
+  serializer = MinimalEventSerializer2(events, many = True)
   return Response(serializer.data)
 
 @api_view(["POST"])

@@ -20,6 +20,9 @@ import AdminIndicator from "./components/AdminIndicator";
 import Footer from "./components/Footer";
 import About from "./pages/About";
 import { SkillProvider } from "../context/SkillContext";
+import CreateProfile from "./pages/CreateProfile";
+import ManageEvent from "./pages/MangeEvent";
+import AdminRoute from "./utils/AdminRoute";
 
 function App() {
   return (
@@ -30,6 +33,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
 
               <Route
                 element={
@@ -45,11 +49,28 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/event" element={<Events />} />
                 <Route path="/event/:id" element={<EventDetail />} />
+
                 <Route path="/notifications" element={<NotificationPage />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/volunteer" element={<VolunteerMatch />} />
                 <Route path="/match" element={<MatchSave />} />
-                <Route path="/createevent" element={<EventForm />} />
+                <Route
+                  path="/event/create"
+                  element={
+                    <AdminRoute>
+                      <EventForm />
+                    </AdminRoute>
+                  }
+                />
+
+                <Route
+                  path="/event/manage"
+                  element={
+                    <AdminRoute>
+                      <ManageEvent />
+                    </AdminRoute>
+                  }
+                />
                 <Route path="/save" element={<Save />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/submit" element={<Thankyou />} />

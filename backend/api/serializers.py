@@ -23,11 +23,15 @@ class MinimalProfileSerializer(serializers.ModelSerializer):
     fields = ["id","fullname"]
 
 class MinimalEventSerializer(serializers.ModelSerializer):
-  skills_needed = SkillSerializer(many= True, read_only = True)
   class Meta:
     model = Event
-    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "skills_needed"]
+    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency"]
 
+class MinimalEventSerializer2(serializers.ModelSerializer):
+  applicants = MinimalProfileSerializer(many=True, read_only =True)
+  class Meta:
+    model = Event
+    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "applicants"]
 
 class EventSerializer(serializers.ModelSerializer):
     #for getting
@@ -36,8 +40,8 @@ class EventSerializer(serializers.ModelSerializer):
     applicants = MinimalProfileSerializer(many=True, read_only=True)
     #for updating
     skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
-    participant_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True) 
-    applicants_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True) 
+    participant_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True, required=False) 
+    applicants_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True, required = False) 
     class Meta:
         model = Event
         fields = "__all__"

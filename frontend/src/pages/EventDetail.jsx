@@ -108,25 +108,25 @@ const EventDetail = () => {
         ) : (
           <div className="relative">
             {/* only for admin */}
-            {user && user.is_staff && (
-              <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
-                <button className="bg-teal-600 p-2 text-white rounded hover:bg-teal-700" onClick={() => setIsUpdateModalOpen(true)}>
-                  Update
-                </button>
-                <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleDelete}>
-                  Delete
-                </button>
-              </div>
-            )}
-            {/* for applicants and participants */}
-            {(isApplied || isJoined) && (
-              <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
+            <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
+              {/* for admin */}
+              {user && user.is_staff && (
+                <>
+                  <button className="bg-teal-600 p-2 text-white rounded hover:bg-teal-700" onClick={() => setIsUpdateModalOpen(true)}>
+                    Update
+                  </button>
+                  <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleDelete}>
+                    Delete
+                  </button>
+                </>
+              )}
+              {/* for applicants and participants */}
+              {(isApplied || isJoined) && (
                 <button className="bg-red-600 p-2 text-white rounded hover:bg-red-700" onClick={handleWithdraw}>
                   Withdraw
                 </button>
-              </div>
-            )}
-
+              )}
+            </div>
             <h1 className="text-3xl md:text-4xl font-bold text-teal-600 mb-4">{event.name}</h1>
             <p className="text-gray-700 mb-6">{event.description}</p>
 

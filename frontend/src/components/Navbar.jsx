@@ -44,11 +44,7 @@ const Navbar = () => {
               Events
             </Link>
           </li>
-          <li>
-            <Link to="/profile" className="text-teal-600 hover:text-gray-300">
-              Profile
-            </Link>
-          </li>
+
           <li>
             <Link to="/notifications" className="text-teal-600 hover:text-gray-300">
               Notifications
@@ -57,6 +53,11 @@ const Navbar = () => {
           <li>
             <Link to="/about" className="text-teal-600 hover:text-gray-300">
               About
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className="text-teal-600 hover:text-gray-300">
+              Profile
             </Link>
           </li>
           <li className="relative">
