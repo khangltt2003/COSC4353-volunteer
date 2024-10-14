@@ -22,6 +22,12 @@ class MinimalProfileSerializer(serializers.ModelSerializer):
     model = UserProfile
     fields = ["id","fullname"]
 
+class MinimalProfileSerializer2(serializers.ModelSerializer):
+  skills = SkillSerializer(many=True, read_only=True)
+  class Meta:
+    model = UserProfile
+    fields = ["id", "user", "fullname", "address1", "address2", "city", "state", "zipcode", "skills", "availability"]
+
 class MinimalEventSerializer(serializers.ModelSerializer):
   class Meta:
     model = Event

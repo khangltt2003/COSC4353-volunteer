@@ -58,12 +58,19 @@ def user_detail(request, user_id):
     user.delete()
     return Response({"message": "user deleted"}, status=status.HTTP_202_ACCEPTED)
 
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def user_detail_mini(request, user_id):
+  user  = get_object_or_404(UserProfile, pk=user_id)
+  if request.method == "GET":
+    serializer = MinimalProfileSerializer2(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 @api_view(["GET", "POST", "PATCH"])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
   user = get_object_or_404(User, pk = request.user.id) 
-  
   #get profile
   if request.method == "GET":
     # serializer = UserSerializer(user)

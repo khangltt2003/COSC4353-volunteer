@@ -6,6 +6,7 @@ urlpatterns = [
     path('user/profile/', user_profile, name='profile'),
     path('user/', view_all_user, name='profile'),
     path('user/<int:user_id>/', user_detail, name='view_profile'),
+    path('user/<int:user_id>/mini', user_detail_mini, name='view_profile'),
     path('skill/', view_all_skill, name='skill'),
     path('event/create/', create_event, name='create_event'),
     path('event/', get_events, name='view_events'),
