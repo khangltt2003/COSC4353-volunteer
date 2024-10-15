@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../axios"; // Axios setup for API requests
+import axios from "../axios";
 import { Link } from "react-router-dom";
 import UserProfileModal from "../components/UserProfileModal";
 import Loading from "../components/Loading";
@@ -9,15 +9,14 @@ const EventManagement = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("events"); // Track the active tab
+  const [activeTab, setActiveTab] = useState("events");
 
-  // Fetch events data on component load
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios({
           method: "GET",
-          url: "/event2/", // Replace with your actual API endpoint
+          url: "/event2/",
         });
         setEvents(response.data);
         setIsLoading(false);
@@ -29,19 +28,16 @@ const EventManagement = () => {
     fetchEvents();
   }, []);
 
-  // Function to open the modal and display the user (applicant/participant) information
   const handleViewUser = (id) => {
     setSelectedUser(id);
     setIsModalOpen(true);
   };
 
-  // Function to close the modal
   const closeModal = () => {
     setSelectedUser(null);
     setIsModalOpen(false);
   };
 
-  // Function to handle approval of applicants
   const handleApprove = async (eventId, userId) => {
     try {
       const response = await axios({
@@ -49,25 +45,21 @@ const EventManagement = () => {
         url: `/event/${eventId}/approve/${userId}/`,
       });
       if (response.status === 200) {
-        // Update the event state by removing the approved applicant
-        setEvents((prevEvents) =>
-          prevEvents.map((event) =>
-            event.id === eventId
-              ? {
-                  ...event,
-                  applicants: event.applicants.filter((applicant) => applicant.id !== userId),
-                  participants: [...event.participants, event.applicants.find((applicant) => applicant.id === userId)],
-                }
-              : event
-          )
-        );
+        setEvents((prev) => {
+          return prev.map((e) => {
+            if (e.id === eventId) {
+              const targetUser = e.applicants.find((applicant) => applicant.id === userId);
+              return { ...e, applicants: e.applicants.filter((applicant) => applicant.id !== userId), participants: [...e.participants, targetUser] };
+            }
+            return e;
+          });
+        });
       }
     } catch (error) {
       console.error("Error approving applicant", error);
     }
   };
 
-  // Function to handle denial of applicants
   const handleDeny = async (eventId, userId) => {
     try {
       const response = await axios({
@@ -75,28 +67,23 @@ const EventManagement = () => {
         url: `/event/${eventId}/deny/${userId}/`,
       });
       if (response.status === 200) {
-        // Update the event state by removing the denied applicant
-        setEvents((prevEvents) =>
-          prevEvents.map((event) =>
-            event.id === eventId
-              ? {
-                  ...event,
-                  applicants: event.applicants.filter((applicant) => applicant.id !== userId),
-                }
-              : event
-          )
-        );
+        setEvents((prev) => {
+          return prev.map((e) => {
+            if (e.id === eventId) return { ...e, applicants: e.applicants.filter((applicant) => applicant.id !== userId) };
+            return e;
+          });
+        });
       }
     } catch (error) {
       console.error("Error denying applicant", error);
     }
   };
 
+  events.sort((a, b) => b.applicants.length || 0 - a.applicants.length || 0);
   return (
     <div className="container mx-auto p-6 min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Event Management</h1>
 
-      {/* Tab Navigation */}
       <div className="flex mb-4">
         <button
           className={`mr-4 px-4 py-2 ${activeTab === "events" ? "bg-teal-600 text-white" : "bg-gray-200"}`}
@@ -115,11 +102,9 @@ const EventManagement = () => {
       {isLoading ? (
         <Loading />
       ) : activeTab === "events" ? (
-        // Events (Applicants) Tab
         events.map((event) => (
           <div key={event.id} className="bg-white p-4 mb-4 rounded-lg shadow-md border">
             <div className="flex justify-between">
-              {/* Event details on the left */}
               <div className="w-1/3 flex items-center gap-3">
                 <Link to={`/event/${event.id}`}>
                   <h2 className="text-xl font-semibold text-teal-600 hover:underline">{event.name}</h2>
@@ -157,11 +142,9 @@ const EventManagement = () => {
           </div>
         ))
       ) : (
-        // Participants Tab
         events.map((event) => (
           <div key={event.id} className="bg-white p-4 mb-4 rounded-lg shadow-md border">
             <div className="flex justify-between">
-              {/* Event details on the left */}
               <div className="w-1/3 flex items-center gap-3">
                 <Link to={`/event/${event.id}`}>
                   <h2 className="text-xl font-semibold text-teal-600 hover:underline">{event.name}</h2>
