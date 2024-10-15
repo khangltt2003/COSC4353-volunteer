@@ -151,17 +151,28 @@ def apply_event(request, event_id):
 
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
-def join_event(request, event_id):
-  event = get_object_or_404(event_id)
-  profile = request.user.user_profile
-  if profile in event.applicants.all() and  profile not in event.particiapants.all():
-    event.participants.add(profile)
-    event.applicants.remove(profile)
+def approve_join_event(request, event_id, user_id):
+  event = get_object_or_404(Event,pk=event_id)
+  user = get_object_or_404(UserProfile, pk =user_id)
+  if user in event.applicants.all() and  user not in event.participants.all():
+    event.participants.add(user)
+    event.applicants.remove(user)
     event.save()
     return Response({"status": "joined"}, status=status.HTTP_200_OK)
   return Response({"error": "Unable to join"}, status=status.HTTP_400_BAD_REQUEST)
   
-  
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def deny_join_event(request, event_id, user_id):
+  event = get_object_or_404(Event, pk = event_id)
+  user = get_object_or_404(UserProfile, pk= user_id)
+  if user in event.applicants.all():
+    event.applicants.remove(user)
+    event.save()
+    return Response({"status":"denied"}, status=status.HTTP_200_OK)
+  return Response({"error": "Unable to join"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 #leave event
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])

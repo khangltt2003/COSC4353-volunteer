@@ -35,9 +35,10 @@ class MinimalEventSerializer(serializers.ModelSerializer):
 
 class MinimalEventSerializer2(serializers.ModelSerializer):
   applicants = MinimalProfileSerializer(many=True, read_only =True)
+  participants = MinimalProfileSerializer(many=True, read_only =True)
   class Meta:
     model = Event
-    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "applicants"]
+    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "applicants", "participants"]
 
 class EventSerializer(serializers.ModelSerializer):
     #for getting
