@@ -4,12 +4,14 @@ import EventCard from "../components/EventCard";
 import Loading from "../components/Loading";
 import AuthContext from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import ProfileHook from "../../context/ProfileHook";
 
 const Events = () => {
   const { user } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { profile, profileLoaded } = ProfileHook();
 
   useEffect(() => {
     const getEvent = async () => {
@@ -29,6 +31,8 @@ const Events = () => {
       filteredEvents.push(eventItem);
     }
   }
+
+  events.sort((a, b) => a.id - b.id);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center relative px-4">
@@ -53,7 +57,12 @@ const Events = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6 w-full">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard
+                key={event.id}
+                event={event}
+                isApplied={profile?.applied_events.some((e) => e.id === event.id)}
+                isJoined={profile?.joined_events.some((e) => e.id === event.id)}
+              />
             ))}
           </div>
         )}

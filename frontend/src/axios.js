@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: `http://127.0.0.1:8000/api`,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,7 +18,7 @@ const refreshAccessToken = async () => {
 
     const response = await axios({
       method: "POST",
-      url: `${import.meta.env.VITE_SERVER_URL}/token/refresh/`,
+      url: `http://127.0.0.1:8000/api/token/refresh/`,
       data: {
         refresh: authTokens.refresh,
       },

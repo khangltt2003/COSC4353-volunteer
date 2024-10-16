@@ -109,7 +109,6 @@ const EventDetail = () => {
           <div className="relative">
             {/* only for admin */}
             <div className="absolute top-0 right-0 flex flex-col md:flex-row gap-2">
-              {/* for admin */}
               {user && user.is_staff && (
                 <>
                   <button className="bg-teal-600 p-2 text-white rounded hover:bg-teal-700" onClick={() => setIsUpdateModalOpen(true)}>

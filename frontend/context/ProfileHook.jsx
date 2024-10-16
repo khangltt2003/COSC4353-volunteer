@@ -14,7 +14,7 @@ const ProfileHook = () => {
         url: `/user/profile/`,
       });
       setProfile(response.data);
-      setProfileLoaded(true); // Indicates the profile fetch attempt was made
+      setProfileLoaded(true);
     } catch (error) {
       console.error("Cannot get user profile", error);
     }
@@ -26,7 +26,7 @@ const ProfileHook = () => {
     }
   }, [authTokens]);
 
-  return { profile, profileLoaded };
+  return { profile, setProfile, profileLoaded };
 };
 
 export default ProfileHook;

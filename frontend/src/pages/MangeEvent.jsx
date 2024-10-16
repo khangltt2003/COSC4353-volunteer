@@ -44,6 +44,7 @@ const EventManagement = () => {
         method: "PUT",
         url: `/event/${eventId}/approve/${userId}/`,
       });
+      //if success update UI
       if (response.status === 200) {
         setEvents((prev) => {
           return prev.map((e) => {
@@ -112,11 +113,11 @@ const EventManagement = () => {
               </div>
 
               <div className="w-2/3 border-l-2 pl-2">
-                <h3 className="text-md font-bold mb-2">Applicants:</h3>
+                <h3 className="text-md font-bold mb-1">Applicants:</h3>
                 <ul>
                   {event.applicants && event.applicants.length > 0 ? (
                     event.applicants.map((applicant) => (
-                      <li key={applicant.id} className="flex justify-between mb-2">
+                      <li key={applicant.id} className="flex justify-between ">
                         <div className="flex items-center gap-4">
                           {applicant.fullname}
                           <button className="bg-teal-600 text-white px-2 py-1 rounded-md" onClick={() => handleViewUser(applicant.id)}>
@@ -152,11 +153,11 @@ const EventManagement = () => {
               </div>
 
               <div className="w-2/3 border-l-2 pl-2">
-                <h3 className="text-md font-bold mb-2">Participants:</h3>
+                <h3 className="text-md font-bold mb-1">Participants:</h3>
                 <ul>
                   {event.participants && event.participants.length > 0 ? (
                     event.participants.map((participant) => (
-                      <li key={participant.id} className="flex justify-between mb-2">
+                      <li key={participant.id} className="flex justify-between mb-1">
                         <div className="flex items-center gap-4">
                           {participant.fullname}
                           <button className="bg-teal-600 text-white px-2 py-1 rounded-md" onClick={() => handleViewUser(participant.id)}>

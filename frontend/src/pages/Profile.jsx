@@ -7,33 +7,17 @@ import EventBoard from "../components/EventBoard";
 import Loading from "../components/Loading";
 import states from "../utils/states";
 import { useSkill } from "../../context/SkillContext";
+import ProfileHook from "../../context/ProfileHook";
 
 const Profile = () => {
   const { authTokens } = useContext(AuthContext);
-  const [profile, setProfile] = useState({
-    fullname: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    preferences: "",
-    skills: [],
-    availability: [],
-    events: [],
-  });
-  // const [profileLoaded, setProfileLoaded] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSkill, setSelectedSkill] = useState({ id: null, name: "" });
-
   const [activeTab, setActiveTab] = useState("profile");
-
-  const { allSkills } = useSkill();
   const [isEditing, setIsEditing] = useState(false);
-
-  const navigate = useNavigate();
+  const { allSkills } = useSkill();
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getProfile = async () => {
@@ -49,13 +33,7 @@ const Profile = () => {
       }
     };
     getProfile();
-  }, [authTokens, navigate]);
-
-  useEffect(() => {
-    if (!isLoading && profile) {
-      setProfile(profile);
-    }
-  }, [profile, isLoading]);
+  }, [authTokens]);
 
   const handleSubmit = async () => {
     try {
@@ -115,14 +93,14 @@ const Profile = () => {
       <div className="w-[95%] md:max-w-[95%] lg:max-w-[80%]  bg-white  rounded-lg p-4 sm:p-6 md:p-8 flex flex-col md:flex-row shadow-teal-600 shadow-2xl my-4">
         <div className="w-full md:w-1/6 flex flex-row md:flex-col  items-center gap-4 border-r border-gray-300 pr-8">
           <button
-            className={` text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
+            className={`w-full text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
             onClick={() => setActiveTab("profile")}
           >
             <i className="bx bx-user md:mr-2"></i>
             <span className="">Your Profile</span>
           </button>
           <button
-            className={`text-lg ${activeTab === "events" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
+            className={`w-full text-lg ${activeTab === "events" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
             onClick={() => setActiveTab("events")}
           >
             <i className="bx bx-calendar-event md:mr-2"></i>
@@ -132,7 +110,7 @@ const Profile = () => {
         {isLoading ? (
           <Loading />
         ) : (
-          <div className="w-4/5 pl-8 ">
+          <div className="w-full md:w-4/5 md:pl-8 ">
             {activeTab === "profile" ? (
               <>
                 <h3 className="text-2xl font-bold  mb-3">{isEditing ? "Edit Your Profile" : "Profile"}</h3>
