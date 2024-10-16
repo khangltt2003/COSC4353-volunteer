@@ -10,7 +10,7 @@ from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from rest_framework.pagination import PageNumberPagination
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -85,13 +85,19 @@ def user_profile(request):
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+#for getting all events
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_events(request):
-  events = Event.objects.all()
-  serializer = MinimalEventSerializer(events, many = True)
-  return Response(serializer.data)
+  events = Event.objects.all().order_by("id")
+  paginator = PageNumberPagination()
+  paginator.size = 15
+  result_page = paginator.paginate_queryset(events, request)
+  serializer = MinimalEventSerializer(result_page, many = True)
+  return paginator.get_paginated_response(serializer.data)
 
+#for event management
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def get_events2(request):

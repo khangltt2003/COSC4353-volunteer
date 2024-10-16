@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
 
 const EventCard = ({ event, isApplied, isJoined }) => {
-  console.log(event, isApplied);
-  console.log(event, isJoined);
-
   return (
     <div className="border border-teal-600 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div className="mb-3 flex justify-between items-center">
