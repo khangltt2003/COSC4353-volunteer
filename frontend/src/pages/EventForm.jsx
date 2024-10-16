@@ -253,7 +253,7 @@ const EventForm = () => {
             </div>
 
             <div className="flex justify-end space-x-4">
-              <button type="button" onClick={() => navigate("/events")} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
+              <button type="button" onClick={() => navigate("/event")} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
                 Cancel
               </button>
               <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">

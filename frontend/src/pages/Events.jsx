@@ -39,9 +39,14 @@ const Events = () => {
       <div className="w-full flex items-center justify-center text-teal-600 my-10 relative">
         <p className="text-3xl sm:text-4xl md:text-5xl font-bold">Volunteer Events</p>
         {user && user.is_staff && (
-          <Link to="/event/manage">
-            <button className="bg-teal-600 absolute top-0 right-0 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition">Manage Event</button>
-          </Link>
+          <div className=" absolute top-0 right-0 flex gap-1">
+            <Link to="/event/create">
+              <button className="bg-teal-600 text-white p-2 rounded-md hover:bg-teal-700 transition">Create Event</button>
+            </Link>
+            <Link to="/event/manage">
+              <button className="bg-teal-600  text-white p-2 rounded-md hover:bg-teal-700 transition">Manage Application</button>
+            </Link>
+          </div>
         )}
       </div>
       <div className="w-full max-w-6xl ">

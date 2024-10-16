@@ -46,12 +46,14 @@ const EventDetail = () => {
 
   const handleApply = async () => {
     try {
-      await axios({
+      const response = await axios({
         method: "PUT",
         url: `/event/${id}/apply/`,
       });
-      alert("successfully applied");
-      window.location.reload();
+      if (response.status === 200) {
+        alert("successfully applied");
+        setIsApplied(true);
+      }
     } catch (err) {
       console.log(("cannot apply", err));
     }
@@ -79,7 +81,7 @@ const EventDetail = () => {
         method: "DELETE",
         url: `/event/${id}/`,
       });
-      alert("Successfully deleted event");
+      alert("successfully deleted event");
       navigate("/event");
     } catch (error) {
       console.log(error);
@@ -88,12 +90,15 @@ const EventDetail = () => {
 
   const handleWithdraw = async () => {
     try {
-      await axios({
+      const response = await axios({
         method: "PUT",
         url: `/event/${id}/leave/`,
       });
-      alert("successfully withdraw from event");
-      window.location.reload();
+      if (response.status === 200) {
+        alert("successfull withdrew from event");
+        setIsApplied(false);
+        setIsJoined(false);
+      }
     } catch (err) {
       console.log("cannot withdraw from event", err);
     }
