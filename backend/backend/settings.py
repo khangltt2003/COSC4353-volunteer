@@ -30,6 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+TIME_ZONE = 'America/Chicago'
+USE_TZ = True  
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",

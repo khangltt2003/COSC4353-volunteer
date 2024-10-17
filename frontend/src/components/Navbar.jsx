@@ -74,7 +74,7 @@ const Navbar = () => {
         </ul>
 
         {isOpen && (
-          <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-md py-4 z-50">
+          <div className="md:hidden absolute top-[80px] left-0 w-full bg-white shadow-md py-4 z-50">
             <ul className="flex flex-col items-center space-y-4">
               <li>
                 <Link to="/" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">

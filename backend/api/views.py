@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models import UserProfile, Event, Skill
 from .serializers import *
@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.pagination import PageNumberPagination
+from django.utils import timezone
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -29,6 +30,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def create_user_profile(sender, instance, created, **kwargs):
   if created:
     UserProfile.objects.create(user=instance)
+
 
 @api_view(["POST"])
 def register(request):
@@ -125,8 +127,14 @@ def event_detail(request, event_id):
     elif request.method == "PUT":
         if not request.user.is_staff:
             return Response({"detail": "Permission denied. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+        
         serializer = EventSerializer(event, data=request.data, partial=True)
         if serializer.is_valid():
+            #send notification when update event
+            for participant in event.participants.all():
+              notification = Notification.objects.create(event_id = event.id, event_name = event.name, type =  "updated")
+              participant.notifications.add(notification)
+
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -134,6 +142,11 @@ def event_detail(request, event_id):
     elif request.method == "DELETE":
         if not request.user.is_staff:
             return Response({"detail": "Permission denied. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
+        #send notification to participants when event is deleted
+        for participant in event.participants.all():
+            notification = Notification.objects.create(event_id = event.id, event_name = event.name, type =  "deleted")
+            participant.notifications.add(notification)
+            
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -163,6 +176,9 @@ def approve_join_event(request, event_id, user_id):
   if user in event.applicants.all() and  user not in event.participants.all():
     event.participants.add(user)
     event.applicants.remove(user)
+    
+    notification = Notification.objects.create(event_id = event.id, event_name = event.name, type = "approved")
+    user.notifications.add(notification)
     event.save()
     return Response({"status": "joined"}, status=status.HTTP_200_OK)
   return Response({"error": "Unable to join"}, status=status.HTTP_400_BAD_REQUEST)
@@ -174,6 +190,8 @@ def deny_join_event(request, event_id, user_id):
   user = get_object_or_404(UserProfile, pk= user_id)
   if user in event.applicants.all():
     event.applicants.remove(user)
+    notification = Notification.objects.create(event_id = event.id, event_name = event.name, type = "denied")
+    user.notifications.add(notification)
     event.save()
     return Response({"status":"denied"}, status=status.HTTP_200_OK)
   return Response({"error": "Unable to join"}, status=status.HTTP_400_BAD_REQUEST)

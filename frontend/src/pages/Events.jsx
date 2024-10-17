@@ -41,7 +41,7 @@ const Events = () => {
   filteredEvents.sort((a, b) => a.id - b.id);
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center relative px-4">
+    <div className="w-full min-h-screen flex flex-col items-center relative px-4 mb-4">
       <div className="w-full flex items-center justify-center text-teal-600 my-10 relative">
         <p className="text-3xl sm:text-4xl md:text-5xl font-bold">Volunteer Events</p>
         {user && user.is_staff && (

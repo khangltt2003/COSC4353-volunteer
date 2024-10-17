@@ -88,6 +88,12 @@ class EventSerializer(serializers.ModelSerializer):
       instance.save()
 
       return instance
+    
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = Notification
+      fields = "__all__"
+  
 class UserRegistrationSerializer(serializers.ModelSerializer):
     email = serializers.CharField(
         # validators=[
@@ -139,6 +145,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     joined_events = MinimalEventSerializer(many=True, read_only=True) 
     applied_events = MinimalEventSerializer(many= True, read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
+    notifications = NotificationSerializer(many=True, read_only=True)
     
     event_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all(), write_only = True)
     skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)

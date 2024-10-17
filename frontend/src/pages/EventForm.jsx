@@ -77,6 +77,7 @@ const EventForm = () => {
         }, 2000);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     } else {
       console.log("Error: Invalid input");

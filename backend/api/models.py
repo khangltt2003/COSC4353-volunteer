@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 STATE_CHOICES = [
     ('AL', 'Alabama'), ('AK', 'Alaska'), ('AZ', 'Arizona'), ('AR', 'Arkansas'),
@@ -30,6 +31,15 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
+class Notification(models.Model):
+    event_id = models.IntegerField()
+    event_name = models.CharField()
+    type = models.CharField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    def __str__(self):
+      return f"event: {self.event_name} type: {type}"
+    
 class Event(models.Model):
     name = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
@@ -47,9 +57,10 @@ class Event(models.Model):
     time = models.TimeField(null=True)
     skills_needed = models.ManyToManyField(Skill, default=list, related_name='events') 
     urgency = models.CharField(max_length=20, choices=URGENCY_CHOICES, default=('medium', 'Medium'))
-
+    
     def __str__(self):
         return self.name
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile", null=True)
     fullname = models.CharField(max_length=100, blank=True)
@@ -63,8 +74,8 @@ class UserProfile(models.Model):
     availability = ArrayField(models.DateField(), default=list, blank=True)
     joined_events = models.ManyToManyField(Event, blank=True, related_name='participants')
     applied_events = models.ManyToManyField(Event, blank =True, related_name="applicants")
+    notifications = models.ManyToManyField(Notification, blank=True, related_name="user")
     def __str__(self):
         return f'{self.user.username} Profile'
-
 
 

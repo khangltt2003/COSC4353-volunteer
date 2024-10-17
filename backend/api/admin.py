@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Event)
 admin.site.register(UserProfile)
 admin.site.register(Skill)
+admin.site.register(Notification)
