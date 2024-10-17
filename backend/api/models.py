@@ -32,7 +32,8 @@ class Skill(models.Model):
         return self.name
 
 class Notification(models.Model):
-    event_id = models.IntegerField()
+    user_id = models.IntegerField(null=True)
+    event_id = models.IntegerField(null=True)
     event_name = models.CharField()
     type = models.CharField()
     created_at = models.DateTimeField(auto_now_add=True)

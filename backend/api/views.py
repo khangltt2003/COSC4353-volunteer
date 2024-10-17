@@ -11,7 +11,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.pagination import PageNumberPagination
-from django.utils import timezone
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -132,7 +131,7 @@ def event_detail(request, event_id):
         if serializer.is_valid():
             #send notification when update event
             for participant in event.participants.all():
-              notification = Notification.objects.create(event_id = event.id, event_name = event.name, type =  "updated")
+              notification = Notification.objects.create(user_id = participant.id, event_id = event.id, event_name = event.name, type =  "updated")
               participant.notifications.add(notification)
 
             serializer.save()
@@ -144,7 +143,7 @@ def event_detail(request, event_id):
             return Response({"detail": "Permission denied. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
         #send notification to participants when event is deleted
         for participant in event.participants.all():
-            notification = Notification.objects.create(event_id = event.id, event_name = event.name, type =  "deleted")
+            notification = Notification.objects.create(user_id = participant, event_id = event.id, event_name = event.name, type =  "deleted")
             participant.notifications.add(notification)
             
         event.delete()
@@ -160,7 +159,7 @@ def view_all_skill(request):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def apply_event(request, event_id):
-  event = get_object_or_404(Event, id=event_id)
+  event = get_object_or_404(Event, pk=event_id)
   profile = request.user.user_profile
   if profile not in event.participants.all() and profile not in event.applicants.all():
     event.applicants.add(profile)
@@ -177,7 +176,7 @@ def approve_join_event(request, event_id, user_id):
     event.participants.add(user)
     event.applicants.remove(user)
     
-    notification = Notification.objects.create(event_id = event.id, event_name = event.name, type = "approved")
+    notification = Notification.objects.create(user_id = user.id, event_id = event.id, event_name = event.name, type = "approved")
     user.notifications.add(notification)
     event.save()
     return Response({"status": "joined"}, status=status.HTTP_200_OK)
@@ -190,7 +189,7 @@ def deny_join_event(request, event_id, user_id):
   user = get_object_or_404(UserProfile, pk= user_id)
   if user in event.applicants.all():
     event.applicants.remove(user)
-    notification = Notification.objects.create(event_id = event.id, event_name = event.name, type = "denied")
+    notification = Notification.objects.create(user_id = user.id, event_id = event.id, event_name = event.name, type = "denied")
     user.notifications.add(notification)
     event.save()
     return Response({"status":"denied"}, status=status.HTTP_200_OK)
@@ -201,7 +200,7 @@ def deny_join_event(request, event_id, user_id):
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def leave_event(request, event_id):
-  event = get_object_or_404(Event, id=event_id)
+  event = get_object_or_404(Event, pk=event_id)
   profile = request.user.user_profile
   if profile in event.participants.all():
     event.participants.remove(profile)
@@ -211,3 +210,12 @@ def leave_event(request, event_id):
   return Response({"status": "left"}, status=status.HTTP_200_OK)
 
 
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_notification(request, notification_id):
+  notification = get_object_or_404(Notification,pk=notification_id)
+  notification.is_read =True
+  notification.save()  
+  return Response(status=status.HTTP_200_OK)
+  
+  

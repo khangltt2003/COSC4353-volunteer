@@ -19,7 +19,7 @@ const NotificationPage = () => {
           {profile.notifications.length > 0 ? (
             <>
               {profile.notifications.map((notification) => (
-                <Notification key={notification.id} type={notification.type} eventId={notification.event_id} eventName={notification.event_name} />
+                <Notification key={notification.id} notification={notification} />
               ))}
             </>
           ) : (
