@@ -9,7 +9,6 @@ import { useSkill } from "../../context/SkillContext";
 import ProfileContext from "../../context/ProfileContext";
 
 const Profile = () => {
-  const { authTokens } = useContext(AuthContext);
   const { profile: profileContext, profileLoaded, getProfile } = useContext(ProfileContext);
   const [profile, setProfile] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
@@ -25,14 +24,6 @@ const Profile = () => {
   useEffect(() => {
     setActiveTab(page);
   }, [page]);
-
-  useEffect(() => {
-    if (!authTokens) {
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    }
-  }, [authTokens, navigate]);
 
   useEffect(() => {
     if (profileLoaded) {
@@ -51,8 +42,7 @@ const Profile = () => {
         data: profile,
       });
       alert("Profile updated successfully!");
-
-      window.location.reload();
+      getProfile();
     } catch (error) {
       console.error("Error updating profile:", error.response.data);
       setIsLoading(false);

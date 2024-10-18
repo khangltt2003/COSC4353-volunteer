@@ -83,7 +83,7 @@ const Events = () => {
             <div className="flex justify-center items-center m-2 gap-2">
               <button
                 disabled={page === 1}
-                className="bg-teal-600 text-white w-[75px] py-1  rounded-lg hover:bg-teal-700 transition disabled:bg-gray-300"
+                className="bg-teal-600 text-white w-[75px] py-2  rounded-lg hover:bg-teal-700 transition disabled:bg-gray-300"
                 onClick={() => navigate(`/event/?page=${page - 1}`)}
               >
                 Previous
@@ -94,7 +94,7 @@ const Events = () => {
               </span>
               <button
                 disabled={page === totalPages}
-                className="bg-teal-600 text-white w-[75px] py-1 rounded-lg hover:bg-teal-700 transition disabled:bg-gray-300"
+                className="bg-teal-600 text-white w-[75px] py-2 rounded-lg hover:bg-teal-700 transition disabled:bg-gray-300"
                 onClick={() => navigate(`/event/?page=${page + 1}`)}
               >
                 Next

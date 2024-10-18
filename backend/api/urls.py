@@ -16,7 +16,7 @@ urlpatterns = [
     path('event/<int:event_id>/approve/<int:user_id>/', approve_join_event, name='approve_join_event'),
     path('event/<int:event_id>/deny/<int:user_id>/', deny_join_event, name='deny_join_event'),
     path('event/<int:event_id>/leave/', leave_event, name='leave_event'),
-    path('notification/<int:notification_id>/', update_notification, name='update_notification'),
+    path('notification/<int:notification_id>/', notification_detail, name='update_notification'),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

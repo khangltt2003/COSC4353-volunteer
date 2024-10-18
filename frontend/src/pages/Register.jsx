@@ -90,7 +90,7 @@ export default function Register() {
   return (
     <div className="relative w-full h-screen bg-[#4a5568]">
       <img className=" absolute w-full h-full object-cover mix-blend-overlay" src={LoginImg} alt="Login" />
-      <Link to="/homepage">
+      <Link to="/">
         <button className="absolute top-4 left-4 z-10 hover:shadow-lg transition-transform duration-300 rounded-full hover:scale-110">
           <div className="absolute inset-0 flex justify-center items-center">
             <div className="bg-cyan-800 rounded-full blur-lg shadow-lg w-24 h-24" />

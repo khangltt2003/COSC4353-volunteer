@@ -210,12 +210,16 @@ def leave_event(request, event_id):
   return Response({"status": "left"}, status=status.HTTP_200_OK)
 
 
-@api_view(["PATCH"])
+@api_view(["PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
-def update_notification(request, notification_id):
+def notification_detail(request, notification_id):
   notification = get_object_or_404(Notification,pk=notification_id)
-  notification.is_read =True
-  notification.save()  
-  return Response(status=status.HTTP_200_OK)
+  if(request.method == "PATCH"):
+    notification.is_read =True
+    notification.save()  
+    return Response(status=status.HTTP_200_OK)
   
+  elif (request.method == "DELETE"):
+    notification.delete()
+    return Response(status=status.HTTP_200_OK)
   
