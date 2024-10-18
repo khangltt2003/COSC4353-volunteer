@@ -143,7 +143,7 @@ def event_detail(request, event_id):
             return Response({"detail": "Permission denied. Admin access required."}, status=status.HTTP_403_FORBIDDEN)
         #send notification to participants when event is deleted
         for participant in event.participants.all():
-            notification = Notification.objects.create(user_id = participant, event_id = event.id, event_name = event.name, type =  "deleted")
+            notification = Notification.objects.create(user_id = participant.id, event_id = event.id, event_name = event.name, type =  "deleted")
             participant.notifications.add(notification)
             
         event.delete()
