@@ -23,6 +23,8 @@ Open your browser and go to [http://localhost:5173](http://localhost:5173).
 
 ## Backend Setup
 
+**Requirement: Make sure a virtual environment for Python is created and activated**
+
 **Step 1: Navigate to the Backend**
 Open another terminal in Visual Studio Code. If you're currently in the frontend, navigate to the backend by running:
 
