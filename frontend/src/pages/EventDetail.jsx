@@ -4,7 +4,7 @@ import axios from "../axios";
 import Loading from "../components/Loading";
 import EventUpdateModal from "../components/EventUpdateModal";
 import AuthContext from "../../context/AuthContext";
-import ProfileHook from "../../context/ProfileHook";
+import ProfileContext from "../../context/ProfileContext";
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -14,9 +14,8 @@ const EventDetail = () => {
   const [isApplied, setIsApplied] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
   const { user } = useContext(AuthContext);
+  const { profile, profileLoaded, getProfile } = useContext(ProfileContext);
   const navigate = useNavigate();
-  const { profile, profileLoaded } = ProfileHook();
-
   useEffect(() => {
     const getEvent = async () => {
       const response = await axios({
@@ -53,6 +52,7 @@ const EventDetail = () => {
       if (response.status === 200) {
         alert("successfully applied");
         setIsApplied(true);
+        getProfile();
       }
     } catch (err) {
       console.log(("cannot apply", err));
@@ -98,6 +98,7 @@ const EventDetail = () => {
         alert("successfull withdrew from event");
         setIsApplied(false);
         setIsJoined(false);
+        getProfile();
       }
     } catch (err) {
       console.log("cannot withdraw from event", err);

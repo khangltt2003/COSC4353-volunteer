@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(() => (localStorage.getItem("AuthTokens") ? JSON.parse(localStorage.getItem("AuthTokens")) : null));
   const [user, setUser] = useState(() => (localStorage.getItem("AuthTokens") ? jwtDecode(localStorage.getItem("AuthTokens")) : null));
   const navigate = useNavigate();
-
   const login = async (data) => {
     try {
       const response = await axios({

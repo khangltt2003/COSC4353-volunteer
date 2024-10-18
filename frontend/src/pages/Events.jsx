@@ -4,14 +4,14 @@ import EventCard from "../components/EventCard";
 import Loading from "../components/Loading";
 import AuthContext from "../../context/AuthContext";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import ProfileHook from "../../context/ProfileHook";
+import ProfileContext from "../../context/ProfileContext";
 
 const Events = () => {
   const { user } = useContext(AuthContext);
+  const { profile, profileLoaded } = useContext(ProfileContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { profile, profileLoaded } = ProfileHook();
   const [totalPages, setTotalPages] = useState(1);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

@@ -1,13 +1,16 @@
 import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa"; // For hamburger and close icons
+import { FaBars, FaTimes, FaBell, FaUserCircle } from "react-icons/fa"; // Add bell and user icons
 import handlogo from "../assets/handlogo.jpg";
 import AuthContext from "../../context/AuthContext";
+import ProfileContext from "../../context/ProfileContext";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
+  const { profile } = useContext(ProfileContext);
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const hideNavbarRoutes = ["/login", "/register"];
   if (hideNavbarRoutes.includes(location.pathname.toLocaleLowerCase())) {
@@ -18,13 +21,16 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
     <div className="bg-white shadow-md">
-      <nav className="flex items-center justify-between h-16 mx-auto px-4 ">
-        {/*Logo and Website name*/}
+      <nav className="flex items-center justify-between h-16 mx-auto px-4">
         <Link to="/" className="flex items-center">
           <img src={handlogo} alt="Logo" className="h-15 w-12 center" />
-          <span className="text-2xl font-bold text-[#14B8A6] md:block hidden ">TALKConnect</span>
+          <span className="text-2xl font-bold text-[#14B8A6] md:block hidden">TALKConnect</span>
         </Link>
 
         <div className="md:hidden">
@@ -33,7 +39,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        <ul className="hidden md:flex space-x-8">
+        <ul className="hidden md:flex space-x-8 text-[17px]">
           <li>
             <Link to="/" className="text-teal-600 hover:text-gray-300">
               Home
@@ -44,33 +50,62 @@ const Navbar = () => {
               Events
             </Link>
           </li>
-
-          <li>
-            <Link to="/notifications" className="text-teal-600 hover:text-gray-300">
-              Notifications
-            </Link>
-          </li>
           <li>
             <Link to="/about" className="text-teal-600 hover:text-gray-300">
               About
             </Link>
           </li>
-          <li>
-            <Link to="/profile" className="text-teal-600 hover:text-gray-300">
-              Profile
-            </Link>
-          </li>
-          <li className="relative">
-            {user ? (
-              <p onClick={() => logout()} className="text-teal-600 hover:text-gray-300 cursor-pointer">
-                Log Out
-              </p>
-            ) : (
-              <Link to="/login" className="text-teal-600 hover:text-gray-300">
-                Log In
-              </Link>
-            )}
-          </li>
+
+          {user ? (
+            <>
+              <li className="relative">
+                {profile?.notifications.reduce((t, n) => t + (n.is_read === false), 0) > 0 && (
+                  <div className="absolute top-0 right-0 rounded-full p-1 bg-red-400"></div>
+                )}
+
+                <Link to="/notifications" className="text-teal-600 hover:text-gray-300">
+                  <FaBell size={20} />
+                </Link>
+              </li>
+              <li className="relative">
+                <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
+                  <FaUserCircle size={25} className="text-teal-600" />
+                </div>
+                {dropdownOpen && (
+                  <div className="absolute z-50 right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+                    <Link to="/profile/?p=profile" className="block px-4 py-2 text-teal-600 hover:bg-gray-200" onClick={toggleDropdown}>
+                      Your Profile
+                    </Link>
+                    <Link to="/profile/?p=event" className="block px-4 py-2 text-teal-600 hover:bg-gray-200" onClick={toggleDropdown}>
+                      Your Events
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        toggleDropdown();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-teal-600 hover:bg-gray-200"
+                    >
+                      Log Out
+                    </button>
+                  </div>
+                )}
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" className="text-teal-600 hover:text-gray-300">
+                  Log In
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" className="text-teal-600 hover:text-gray-300">
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
 
         {isOpen && (
@@ -87,37 +122,54 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/profile" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link to="/notifications" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
-                  Notifications
-                </Link>
-              </li>
-              <li>
                 <Link to="/about" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
                   About
                 </Link>
               </li>
               <li>
-                {user ? (
-                  <p
-                    onClick={() => {
-                      logout();
-                      toggleMenu();
-                    }}
-                    className="text-teal-600 hover:text-gray-300 cursor-pointer"
-                  >
-                    Log Out
-                  </p>
-                ) : (
-                  <Link to="/login" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
-                    Log In
-                  </Link>
-                )}
+                <Link to="/notifications" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
+                  <FaBell size={20} />
+                </Link>
               </li>
+
+              {user ? (
+                <>
+                  <li>
+                    <Link to="/profile/?p=page" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/profile/?p=event" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
+                      My Events
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        logout();
+                        toggleMenu();
+                      }}
+                      className="text-teal-600 hover:text-gray-300"
+                    >
+                      Log Out
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/login" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
+                      Log In
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/register" onClick={toggleMenu} className="text-teal-600 hover:text-gray-300">
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         )}

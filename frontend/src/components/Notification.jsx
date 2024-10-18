@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "../axios";
 
-const Notification = ({ notification }) => {
-  let { id, eventName, eventId, type, created_at } = notification;
+const Notification = ({ notification, getProfile }) => {
+  let { id, event_name, event_id, type, created_at } = notification;
   const [isRead, setIsRead] = useState(notification.is_read);
   let bgColor, borderColor;
   switch (type) {
@@ -36,6 +36,7 @@ const Notification = ({ notification }) => {
         });
         if (response.status === 200) {
           setIsRead(true);
+          getProfile();
         }
       } catch (err) {
         console.log(err);
@@ -51,8 +52,8 @@ const Notification = ({ notification }) => {
       {type === "approved" && (
         <p>
           Congratulation! Your application to{" "}
-          <a className="underline " href={`/event/${eventId}`}>
-            {eventName}
+          <a className="underline " href={`/event/${event_id}`}>
+            {event_name}
           </a>{" "}
           is approved.
         </p>
@@ -60,8 +61,8 @@ const Notification = ({ notification }) => {
       {type === "denied" && (
         <p>
           Unfortunately, your application to{" "}
-          <a className="underline " href={`/event/${eventId}`}>
-            {eventName}
+          <a className="underline " href={`/event/${event_id}`}>
+            {event_name}
           </a>{" "}
           is denied.
         </p>
@@ -69,15 +70,15 @@ const Notification = ({ notification }) => {
       {type === "updated" && (
         <p>
           The event that you joined{" "}
-          <a className="underline " href={`/event/${eventId}`}>
-            {eventName}
+          <a className="underline " href={`/event/${event_id}`}>
+            {event_name}
           </a>{" "}
           is updated. Please check.
         </p>
       )}
       {type === "deleted" && (
         <p>
-          The event that you joined <a className="underline ">{eventName}</a> is deleted.
+          The event that you joined <a className="underline ">{event_name}</a> is deleted.
         </p>
       )}
     </div>

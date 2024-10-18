@@ -1,11 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
 import ContactUs from "./pages/ContactUs";
-import Thankyou from "./pages/Thankyou";
 import EventForm from "./pages/EventForm";
-import Save from "./pages/Save";
 import VolunteerMatch from "./pages/VolunteerMatch";
-import MatchSave from "./pages/MatchSave";
-import History from "./pages/History";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import HomePage from "./pages/Homepage";
@@ -23,6 +19,8 @@ import { SkillProvider } from "../context/SkillContext";
 import CreateProfile from "./pages/CreateProfile";
 import ManageEvent from "./pages/MangeEvent";
 import AdminRoute from "./utils/AdminRoute";
+import { ProfileProvider } from "../context/ProfileContext";
+import EventBoard from "./components/EventBoard";
 
 function App() {
   return (
@@ -30,54 +28,53 @@ function App() {
       <div>
         <SkillProvider>
           <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/create-profile" element={<CreateProfile />} />
-
-              <Route
-                element={
-                  <>
-                    <AdminIndicator />
-                    <Navbar />
-                    <Outlet />
-                    <Footer />
-                  </>
-                }
-              >
-                <Route path="/" element={<HomePage />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/event" element={<Events />} />
-                <Route path="/event/:id" element={<EventDetail />} />
-
-                <Route path="/notifications" element={<NotificationPage />} />
-                <Route path="/history" element={<History />} />
-                <Route path="/volunteer" element={<VolunteerMatch />} />
-                <Route path="/match" element={<MatchSave />} />
-                <Route
-                  path="/event/create"
-                  element={
-                    <AdminRoute>
-                      <EventForm />
-                    </AdminRoute>
-                  }
-                />
+            <ProfileProvider>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/create-profile" element={<CreateProfile />} />
 
                 <Route
-                  path="/event/manage"
                   element={
-                    <AdminRoute>
-                      <ManageEvent />
-                    </AdminRoute>
+                    <>
+                      <AdminIndicator />
+                      <Navbar />
+                      <Outlet />
+                      <Footer />
+                    </>
                   }
-                />
-                <Route path="/save" element={<Save />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/submit" element={<Thankyou />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/about" element={<About />} />
-              </Route>
-            </Routes>
+                >
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile/event" element={<EventBoard />} />
+                  <Route path="/event" element={<Events />} />
+                  <Route path="/event/:id" element={<EventDetail />} />
+
+                  <Route path="/notifications" element={<NotificationPage />} />
+                  <Route path="/volunteer" element={<VolunteerMatch />} />
+                  <Route
+                    path="/event/create"
+                    element={
+                      <AdminRoute>
+                        <EventForm />
+                      </AdminRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/event/manage"
+                    element={
+                      <AdminRoute>
+                        <ManageEvent />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route path="/contact" element={<ContactUs />} />
+                  <Route path="/logout" element={<Logout />} />
+                  <Route path="/about" element={<About />} />
+                </Route>
+              </Routes>
+            </ProfileProvider>
           </AuthProvider>
         </SkillProvider>
       </div>

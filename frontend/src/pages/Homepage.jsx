@@ -1,10 +1,4 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import LogoImg from "../assets/Logo.jpg";
-import Bgimage from "../assets/bgimage.jpg";
-import Bg from "../assets/bg.jpg";
-import Navbar from "../components/Navbar";
 import Slideshow from "../components/Slideshow";
 
 const HomePage = () => {

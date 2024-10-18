@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Notification from "../components/Notification";
-import ProfileHook from "../../context/ProfileHook";
 import Loading from "../components/Loading";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+import ProfileContext from "../../context/ProfileContext";
 
 const NotificationPage = () => {
-  const { profile, profileLoaded } = ProfileHook();
+  const { authTokens } = useContext(AuthContext);
+  const { profile, profileLoaded, getProfile } = useContext(ProfileContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authTokens) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    }
+    getProfile();
+  }, [navigate]);
 
   if (profileLoaded) {
     profile.notifications.sort((a, b) => b.id - a.id);
@@ -19,7 +32,7 @@ const NotificationPage = () => {
           {profile.notifications.length > 0 ? (
             <>
               {profile.notifications.map((notification) => (
-                <Notification key={notification.id} notification={notification} />
+                <Notification key={notification.id} notification={notification} getProfile={getProfile} />
               ))}
             </>
           ) : (

@@ -1,52 +1,61 @@
 import { useContext, useEffect, useState } from "react";
-// import AuthContext from "../../context/AuthContext";
 import AuthContext from "../../context/AuthContext";
 import axios from "../axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import EventBoard from "../components/EventBoard";
 import Loading from "../components/Loading";
 import states from "../utils/states";
 import { useSkill } from "../../context/SkillContext";
-import ProfileHook from "../../context/ProfileHook";
+import ProfileContext from "../../context/ProfileContext";
 
 const Profile = () => {
   const { authTokens } = useContext(AuthContext);
+  const { profile: profileContext, profileLoaded, getProfile } = useContext(ProfileContext);
+  const [profile, setProfile] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedSkill, setSelectedSkill] = useState({ id: null, name: "" });
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const { allSkills } = useSkill();
-  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [query] = useSearchParams();
+  const navigate = useNavigate();
+  const page = query.get("p") || "profile";
 
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const response = await axios({
-          method: "GET",
-          url: `/user/profile/`,
-        });
-        setProfile(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-    getProfile();
-  }, [authTokens]);
+    setActiveTab(page);
+  }, [page]);
+
+  useEffect(() => {
+    if (!authTokens) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    }
+  }, [authTokens, navigate]);
+
+  useEffect(() => {
+    if (profileLoaded) {
+      setIsLoading(false);
+      setProfile(profileContext);
+    }
+  }, [profileContext, profileLoaded]);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
-      profile.skill_ids = profile.skills.map((skill) => skill.id);
+      profile.skill_ids = profile?.skills.map((skill) => skill.id);
       await axios({
         method: "PATCH",
         url: `/user/profile/`,
         data: profile,
       });
       alert("Profile updated successfully!");
+
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error.response.data);
+      setIsLoading(false);
       alert(`Failed to update profile: ${error.response.data.message || error.message}`);
     }
   };
@@ -70,7 +79,7 @@ const Profile = () => {
   };
 
   const handleAddSkill = () => {
-    if (selectedSkill && !profile.skills.some((el) => el.id === selectedSkill.id)) {
+    if (selectedSkill && !profile?.skills.some((el) => el.id === selectedSkill.id)) {
       console.log(selectedSkill);
       setProfile((prev) => ({
         ...prev,
@@ -85,7 +94,8 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
-    window.location.reload();
+    setIsEditing(false);
+    getProfile();
   };
 
   return (
@@ -94,14 +104,14 @@ const Profile = () => {
         <div className="w-full md:w-1/6 flex flex-row md:flex-col  items-center gap-4 border-r border-gray-300 pr-8">
           <button
             className={`w-full text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
-            onClick={() => setActiveTab("profile")}
+            onClick={() => navigate("/profile/?p=profile")}
           >
             <i className="bx bx-user md:mr-2"></i>
             <span className="">Your Profile</span>
           </button>
           <button
-            className={`w-full text-lg ${activeTab === "events" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
-            onClick={() => setActiveTab("events")}
+            className={`w-full text-lg ${activeTab === "event" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
+            onClick={() => navigate("/profile/?p=event")}
           >
             <i className="bx bx-calendar-event md:mr-2"></i>
             <span className="">Your Events</span>
@@ -122,7 +132,7 @@ const Profile = () => {
                       type="text"
                       disabled={isEditing ? false : true}
                       name="fullname"
-                      value={profile.fullname}
+                      value={profile?.fullname}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -133,7 +143,7 @@ const Profile = () => {
                       type="text"
                       disabled={isEditing ? false : true}
                       name="address1"
-                      value={profile.address1}
+                      value={profile?.address1}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -144,7 +154,7 @@ const Profile = () => {
                       type="text"
                       disabled={isEditing ? false : true}
                       name="address2"
-                      value={profile.address2}
+                      value={profile?.address2}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -155,7 +165,7 @@ const Profile = () => {
                       type="text"
                       disabled={isEditing ? false : true}
                       name="city"
-                      value={profile.city}
+                      value={profile?.city}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -166,7 +176,7 @@ const Profile = () => {
                     <select
                       disabled={isEditing ? false : true}
                       name="state"
-                      value={profile.state}
+                      value={profile?.state}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     >
@@ -184,7 +194,7 @@ const Profile = () => {
                       type="text"
                       disabled={isEditing ? false : true}
                       name="zipcode"
-                      value={profile.zipcode}
+                      value={profile?.zipcode}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -197,7 +207,7 @@ const Profile = () => {
                       id="preferences"
                       disabled={isEditing ? false : true}
                       name="preferences"
-                      value={profile.preferences}
+                      value={profile?.preferences}
                       onChange={handleInputChange}
                       className="w-full md:w-5/6 flex-grow p-2 border rounded border-gray-300 text-sm"
                     />
@@ -206,7 +216,7 @@ const Profile = () => {
                   <div className="mb-4 flex flex-col items-start md:flex-row md:items-center">
                     <label className="block font-bold text-sm mb-0 mr-2 w-full  md:w-1/6 ">Skills:</label>
                     <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                      {profile.skills.map((el) => {
+                      {profile?.skills.map((el) => {
                         return (
                           <div className="border flex rounded p-2 bg-teal-600 text-white" key={el.id}>
                             {el.name}
@@ -253,7 +263,7 @@ const Profile = () => {
                   <div className="mb-4 flex flex-col items-start md:flex-row md:items-center">
                     <label className="block font-bold text-sm mb-0 mr-2 w-full  md:w-1/6">Current Availability:</label>
                     <div className="flex gap-3 w-5/6 flex-wrap border-gray-300 text-sm">
-                      {profile.availability.map((el, i) => {
+                      {profile?.availability.map((el, i) => {
                         return (
                           <div className="border flex rounded p-2 bg-teal-600 text-white" key={i}>
                             {el}
@@ -320,7 +330,7 @@ const Profile = () => {
                 </div>
               </>
             ) : (
-              <EventBoard appliedEvents={profile.applied_events} joinedEvents={profile.joined_events} />
+              <EventBoard appliedEvents={profile?.applied_events} joinedEvents={profile?.joined_events} />
             )}
           </div>
         )}
