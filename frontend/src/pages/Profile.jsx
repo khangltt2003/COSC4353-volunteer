@@ -43,6 +43,7 @@ const Profile = () => {
       });
       alert("Profile updated successfully!");
       getProfile();
+      setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error.response.data);
       setIsLoading(false);
@@ -87,6 +88,8 @@ const Profile = () => {
     setIsEditing(false);
     getProfile();
   };
+
+  profile?.availability.sort((a, b) => new Date(a) - new Date(b));
 
   return (
     <section className="bg-gray-100 flex justify-center min-h-screen">

@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.pagination import PageNumberPagination
+from .utils import match_when_event_update, match_when_user_update
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -29,7 +30,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def create_user_profile(sender, instance, created, **kwargs):
   if created:
     UserProfile.objects.create(user=instance)
-
 
 @api_view(["POST"])
 def register(request):
@@ -83,6 +83,7 @@ def user_profile(request):
     serializer = UserProfileSerializer(user.user_profile, data=request.data, partial=True)
     if serializer.is_valid(): 
       serializer.save()
+      match_when_user_update(user.user_profile.id)
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,7 +112,8 @@ def get_events2(request):
 def create_event(request):
   serializer = EventSerializer(data=request.data)
   if serializer.is_valid():
-    serializer.save()
+    event = serializer.save()
+    match_when_event_update(event.id)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
   return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -133,8 +135,8 @@ def event_detail(request, event_id):
             for participant in event.participants.all():
               notification = Notification.objects.create(user_id = participant.id, event_id = event.id, event_name = event.name, type =  "updated")
               participant.notifications.add(notification)
-
             serializer.save()
+            match_when_event_update(event.id)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

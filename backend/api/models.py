@@ -73,6 +73,7 @@ class UserProfile(models.Model):
     skills = models.ManyToManyField(Skill, blank=True, related_name='user_profile')  
     preference = models.TextField(blank=True)
     availability = ArrayField(models.DateField(), default=list, blank=True)
+    matched_events = models.ManyToManyField(Event, blank=True, related_name='matched_users')
     joined_events = models.ManyToManyField(Event, blank=True, related_name='participants')
     applied_events = models.ManyToManyField(Event, blank =True, related_name="applicants")
     notifications = models.ManyToManyField(Notification, blank=True, related_name="user")

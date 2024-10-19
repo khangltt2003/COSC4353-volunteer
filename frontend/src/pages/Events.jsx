@@ -38,12 +38,10 @@ const Events = () => {
 
   const filteredEvents = events.filter((eventItem) => eventItem.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  filteredEvents.sort((a, b) => a.id - b.id);
-
   return (
     <div className="w-full min-h-screen flex flex-col items-center relative px-4 mb-4">
-      <div className="w-full flex items-center justify-center text-teal-600 my-10 relative">
-        <p className="text-3xl sm:text-4xl md:text-5xl font-bold">Volunteer Events</p>
+      <div className="w-full flex items-center justify-center text-teal-600 my-5 relative">
+        <p className="text-3xl sm:text-4xl md:text-4xl font-bold">Volunteer Events</p>
         {user && user.is_staff && (
           <div className="absolute top-0 right-0 flex gap-1">
             <Link to="/event/create">
@@ -57,6 +55,21 @@ const Events = () => {
       </div>
 
       <div className="w-full max-w-6xl">
+        <div className="mb-4 ">
+          <p className="text-xl text-teal-600 font-semibold mb-2">Matched Events</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  w-full">
+            {profile?.matched_events.map((event) => {
+              return (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  isApplied={profile?.applied_events.some((e) => e.id === event.id)}
+                  isJoined={profile?.joined_events.some((e) => e.id === event.id)}
+                />
+              );
+            })}
+          </div>
+        </div>
         <input
           type="text"
           placeholder="Search events..."

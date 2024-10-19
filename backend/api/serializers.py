@@ -38,16 +38,18 @@ class MinimalEventSerializer2(serializers.ModelSerializer):
   participants = MinimalProfileSerializer(many=True, read_only =True)
   class Meta:
     model = Event
-    fields = ["id", "name", "description", "address", "city", "state", "zipcode", "date", "time", "urgency", "applicants", "participants"]
+    fields = ["id", "name", "applicants", "participants", "matched_users"]
 
 class EventSerializer(serializers.ModelSerializer):
     #for getting
     skills_needed = SkillSerializer(many=True, read_only = True)
     participants = MinimalProfileSerializer(many=True, read_only=True)
     applicants = MinimalProfileSerializer(many=True, read_only=True)
+    matched_users = MinimalProfileSerializer(many=True, read_only=True)
     #for updating
     skill_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), write_only = True)
     participant_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True, required=False) 
+    matched_users_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True, required = False) 
     applicants_ids = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), write_only=True, required = False) 
     class Meta:
         model = Event
@@ -60,6 +62,7 @@ class EventSerializer(serializers.ModelSerializer):
       if request and not request.user.is_staff:
         representation.pop("participants", None)
         representation.pop("applicants", None)
+        representation.pop("matched_users", None)
       return representation
 
     def create(self, validated_data):
@@ -144,6 +147,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
     joined_events = MinimalEventSerializer(many=True, read_only=True) 
     applied_events = MinimalEventSerializer(many= True, read_only=True)
+    matched_events = MinimalEventSerializer(many= True, read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
     notifications = NotificationSerializer(many=True, read_only=True)
     
