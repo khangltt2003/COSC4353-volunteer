@@ -1,32 +1,70 @@
-from .models import Event, UserProfile
+from .models import Event, UserProfile, Notification
 from django.shortcuts import get_object_or_404
 
 
-def match_when_user_update(user_id):
-  user = get_object_or_404(UserProfile,pk =user_id)
-  matched_event = []
+def match_when_user_update(user):
+  matched_events = []
   for event in Event.objects.all():
-    #same location
-    if user.state == event.state:
-      #same date
-      if event.date in user.availability:
-        # > 2 matched skills
-        if user.skills.filter(id__in=event.skills_needed.all()).count() > 1:
-          matched_event.append(event)
+      if event in user.matched_events.all() or event in user.joined_events.all() or event in user.applied_events.all():
+          continue
+      #different state
+      if user.state != event.state:
+        continue
+      
+      if event.date not in user.availability:
+        continue
+      
+      if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
+        continue
+      matched_events.append(event)
+      notification = Notification.objects.create(event_id = event.id, user_id = user.id, type ="matched", event_name = event.name)
+      user.notifications.add(notification)
   
-  user.matched_events.set(matched_event)  
+  user.matched_events.set(matched_events)  
   return
 
-def match_when_event_update(event_id):
-    event = get_object_or_404(Event, pk=event_id)
+def match_when_event_update(event):
     matched_users = []
-
     for user in UserProfile.objects.all():
-        if user.state == event.state:
-            if event.date in user.availability:
-                matched_skills = user.skills.filter(id__in=event.skills_needed.all()).count()
-                if matched_skills > 1:
-                    matched_users.append(user)
-
+        #user not in matching
+        if event in user.matched_events.all() or event in user.joined_events.all() or event in user.applied_events.all():
+          continue
+        
+        #different state
+        if user.state != event.state:
+          continue
+        
+        if event.date not in user.availability:
+          continue
+        
+        if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
+          continue
+        
+        matched_users.append(user)
+        notification = Notification.objects.create(event_id = event.id, user_id = user.id, type ="matched", event_name = event.name)
+        user.notifications.add(notification)
+    
     event.matched_users.set(matched_users)
+    return
+  
+def match ():
+    for user in UserProfile.objects.all():
+      matched_events = []
+      for event in Event.objects.all():
+        if event in user.matched_events.all() or event in user.joined_events.all() or event in user.applied_events.all():
+            continue
+        #different state
+        if user.state != event.state:
+          continue
+        
+        if event.date not in user.availability:
+          continue
+        
+        if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
+          continue
+        matched_events.append(event)
+        notification = Notification.objects.create(event_id = event.id, user_id = user.id, type ="matched", event_name = event.name)
+        user.notifications.add(notification)
+        
+      user.matched_events.set(matched_events)  
     return

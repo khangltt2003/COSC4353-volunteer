@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import UserProfile, Event, Skill
 from .serializers import *
@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.pagination import PageNumberPagination
-from .utils import match_when_event_update, match_when_user_update
+from .utils import match_when_event_update, match_when_user_update, match
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -78,12 +78,12 @@ def user_profile(request):
     serializer = UserProfileSerializer(user.user_profile)
     return Response(serializer.data)
   
-  #update profile
+  #update profile and match user with event
   elif request.method == "PATCH":
     serializer = UserProfileSerializer(user.user_profile, data=request.data, partial=True)
     if serializer.is_valid(): 
-      serializer.save()
-      match_when_user_update(user.user_profile.id)
+      new_user = serializer.save()
+      match_when_user_update(new_user)
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -92,12 +92,31 @@ def user_profile(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_events(request):
-  events = Event.objects.all().order_by("id")
-  paginator = PageNumberPagination()
-  paginator.size = 15
-  result_page = paginator.paginate_queryset(events, request)
-  serializer = MinimalEventSerializer(result_page, many = True)
-  return paginator.get_paginated_response(serializer.data)
+    # Fetching query parameters
+    skills_needed = request.GET.getlist('skills_needed', [])
+    city = request.GET.get('city', '')
+    state = request.GET.get('state', '')
+    urgency = request.GET.get('urgency', '')
+
+    events = Event.objects.all().order_by("id")
+
+    if skills_needed:
+        events = events.filter(skills_needed__id__in=skills_needed).distinct()
+
+    if city:
+        events = events.filter(city__icontains=city)
+    if state:
+        events = events.filter(state__icontains=state)
+
+    if urgency:
+        events = events.filter(urgency__icontains=urgency)
+
+    paginator = PageNumberPagination()
+    paginator.page_size = 15
+    result_page = paginator.paginate_queryset(events, request)
+
+    serializer = MinimalEventSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 #for event management
 @api_view(["GET"])
@@ -112,8 +131,9 @@ def get_events2(request):
 def create_event(request):
   serializer = EventSerializer(data=request.data)
   if serializer.is_valid():
-    event = serializer.save()
-    match_when_event_update(event.id)
+    new_event = serializer.save()
+    #match event
+    match_when_event_update(new_event)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
   return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -135,8 +155,9 @@ def event_detail(request, event_id):
             for participant in event.participants.all():
               notification = Notification.objects.create(user_id = participant.id, event_id = event.id, event_name = event.name, type =  "updated")
               participant.notifications.add(notification)
-            serializer.save()
-            match_when_event_update(event.id)
+            new_event = serializer.save()
+            #match event
+            match_when_event_update(new_event)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -225,3 +246,8 @@ def notification_detail(request, notification_id):
     notification.delete()
     return Response(status=status.HTTP_200_OK)
   
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def match_user(request):
+  match()
+  return Response(status=status.HTTP_200_OK)

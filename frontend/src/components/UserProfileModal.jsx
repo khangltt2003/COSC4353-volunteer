@@ -8,7 +8,7 @@ const UserProfileModal = ({ id, closeModal }) => {
   const getUSerProfile = async (id) => {
     const response = await axios({
       method: "GET",
-      url: `/user/${id}/mini`,
+      url: `/user/${id}/mini/`,
     });
     setProfile(response.data);
     setIsLoading(false);

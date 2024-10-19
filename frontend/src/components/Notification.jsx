@@ -26,6 +26,11 @@ const Notification = ({ notification, getProfile }) => {
       borderColor = "border-red-400";
       xColor = "bg-red-300";
       break;
+    case "matched":
+      bgColor = "bg-blue-100";
+      borderColor = "border-blue-400";
+      xColor = "bg-blue-300";
+      break;
     default:
       bgColor = "bg-white";
       borderColor = "border-gray-200";
@@ -98,6 +103,15 @@ const Notification = ({ notification, getProfile }) => {
             {event_name}
           </a>{" "}
           is updated. Please check.
+        </p>
+      )}
+      {type === "matched" && (
+        <p>
+          You&apos;re matched with a new event{" "}
+          <a className="underline " href={`/event/${event_id}`}>
+            {event_name}
+          </a>{" "}
+          based on your profile!{" "}
         </p>
       )}
       {type === "deleted" && (

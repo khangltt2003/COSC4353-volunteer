@@ -17,13 +17,12 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { allSkills } = useSkill();
   const [isLoading, setIsLoading] = useState(true);
-  const [query] = useSearchParams();
-  const navigate = useNavigate();
-  const page = query.get("p") || "profile";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const p = searchParams.get("p") || "profile";
 
   useEffect(() => {
-    setActiveTab(page);
-  }, [page]);
+    setActiveTab(p);
+  }, [p]);
 
   useEffect(() => {
     if (profileLoaded) {
@@ -97,14 +96,14 @@ const Profile = () => {
         <div className="w-full md:w-1/6 flex flex-row md:flex-col  items-center gap-4 border-r border-gray-300 pr-8">
           <button
             className={`w-full text-lg ${activeTab === "profile" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
-            onClick={() => navigate("/profile/?p=profile")}
+            onClick={() => setSearchParams("p=profile")}
           >
             <i className="bx bx-user md:mr-2"></i>
             <span className="">Your Profile</span>
           </button>
           <button
             className={`w-full text-lg ${activeTab === "event" ? "font-semibold text-teal-600 " : "text-gray-500 hover:text-teal-600"}`}
-            onClick={() => navigate("/profile/?p=event")}
+            onClick={() => setSearchParams("p=event")}
           >
             <i className="bx bx-calendar-event md:mr-2"></i>
             <span className="">Your Events</span>

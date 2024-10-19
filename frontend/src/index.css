@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 .form-large-text {
-  @apply text-base; /* Apply the desired Tailwind text size utility class */
+  @apply text-base;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Optional: adds a slight upward motion */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -18,13 +18,17 @@
 }
 
 .fade-in {
-  opacity: 0; /* Start as invisible */
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Transition for opacity and position */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
 .fade-in.visible {
-  opacity: 1; /* Fully visible when in view */
-  animation: fadeIn 0.5s forwards; /* Trigger the fade-in animation */
+  opacity: 1;
+  animation: fadeIn 0.5s forwards;
 }
 
-
+.custom-scrollbar {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(13 148 136) transparent;
+}

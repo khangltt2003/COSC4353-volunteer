@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../axios";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import UserProfileModal from "../components/UserProfileModal";
 import Loading from "../components/Loading";
 
@@ -10,7 +10,9 @@ const EventManagement = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("events");
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const p = searchParams.get("p") || "applications";
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -27,6 +29,10 @@ const EventManagement = () => {
 
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    setActiveTab(p);
+  }, [p]);
 
   const handleViewUser = (id) => {
     setSelectedUser(id);
@@ -87,14 +93,14 @@ const EventManagement = () => {
 
       <div className="flex mb-4">
         <button
-          className={`mr-4 px-4 py-2 ${activeTab === "events" ? "bg-teal-600 text-white" : "bg-gray-200"}`}
-          onClick={() => setActiveTab("events")}
+          className={`mr-4 px-4 py-2 ${activeTab === "applications" ? "bg-teal-600 text-white" : "bg-gray-200"}`}
+          onClick={() => setSearchParams("p=applications")}
         >
           Applicants
         </button>
         <button
           className={`px-4 py-2 ${activeTab === "participants" ? "bg-teal-600 text-white" : "bg-gray-200"}`}
-          onClick={() => setActiveTab("participants")}
+          onClick={() => setSearchParams("p=participants")}
         >
           Participants
         </button>
@@ -102,7 +108,7 @@ const EventManagement = () => {
 
       {isLoading ? (
         <Loading />
-      ) : activeTab === "events" ? (
+      ) : activeTab === "applications" ? (
         events.map((event) => (
           <div key={event.id} className="bg-white p-4 mb-4 rounded-lg shadow-md border">
             <div className="flex justify-between">

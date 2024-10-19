@@ -72,9 +72,7 @@ const EventForm = () => {
         console.log(response);
         setIsLoading(false);
         alert("Successfully create event");
-        setTimeout(() => {
-          navigate("/event");
-        }, 2000);
+        navigate("/event");
       } catch (error) {
         console.log(error);
         setIsLoading(false);

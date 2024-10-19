@@ -38,6 +38,10 @@ const Events = () => {
 
   const filteredEvents = events.filter((eventItem) => eventItem.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
+  if (profile) {
+    profile.matched_events.sort((a, b) => a.id || 0 - b.id || 0);
+  }
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center relative px-4 mb-4">
       <div className="w-full flex items-center justify-center text-teal-600 my-5 relative">
@@ -55,21 +59,26 @@ const Events = () => {
       </div>
 
       <div className="w-full max-w-6xl">
-        <div className="mb-4 ">
-          <p className="text-xl text-teal-600 font-semibold mb-2">Matched Events</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  w-full">
-            {profile?.matched_events.map((event) => {
-              return (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  isApplied={profile?.applied_events.some((e) => e.id === event.id)}
-                  isJoined={profile?.joined_events.some((e) => e.id === event.id)}
-                />
-              );
-            })}
+        {profile?.matched_events.length > 0 && (
+          <div className="mb-4 h-[320px] overflow-y-scroll  custom-scrollbar">
+            <p className="text-xl text-teal-600 font-semibold mb-2">
+              Matched Events <i className="bx bxs-star"></i>
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6  w-full">
+              {profile?.matched_events.map((event) => {
+                return (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    isApplied={profile?.applied_events.some((e) => e.id === event.id)}
+                    isJoined={profile?.joined_events.some((e) => e.id === event.id)}
+                  />
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
+
         <input
           type="text"
           placeholder="Search events..."

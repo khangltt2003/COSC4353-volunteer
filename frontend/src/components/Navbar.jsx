@@ -27,7 +27,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-white shadow-md flex justify-center">
-      <div className="w-[100%] md:w-[90%]">
+      <div className="w-[100%] ">
         <nav className="flex items-center justify-between h-16 mx-auto px-4">
           <Link to="/" className="flex items-center">
             <img src={handlogo} alt="Logo" className="h-15 w-12 center" />
