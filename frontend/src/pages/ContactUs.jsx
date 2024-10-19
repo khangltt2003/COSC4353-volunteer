@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import bg from "../assets/bg.avif";
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -14,6 +14,9 @@ const ContactUs = () => {
   const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [messageError, setMessageError] = useState(false);
+  
+  // New state for the overall error message
+  const [formError, setFormError] = useState("");
 
   const handleName = (setter, setError) => (event) => {
     const inputValue = event.target.value;
@@ -55,29 +58,41 @@ const ContactUs = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!firstNameError && !lastNameError && !emailError && !messageError && firstName && lastName && email && message) {
-      console.log("Submit");
-      navigate("/submit");
-    } else {
-      if (firstName.length === 0) setFirstNameError(true);
-      if (lastName.length === 0) setLastNameError(true);
-      if (email.length === 0) setEmailError(true);
-      if (message.length === 0) setMessageError(true);
-      console.log("Error: Invalid input");
+    // Reset error message and field errors
+    setFormError("");
+    setFirstNameError(firstName.length === 0);
+    setLastNameError(lastName.length === 0);
+    setEmailError(email.length === 0);
+    setMessageError(message.length === 0);
+
+    // Check if any fields are empty
+    if (!firstName || !lastName || !email || !message) {
+      setFormError("Please fill out all required fields."); 
+      return; 
     }
+
+    // Proceed to submission
+    console.log("Submit");
+    navigate("/submit");
   };
 
   return (
-    <div className="full-w w-screen min-h-screen font-black bg-cyan-100 ">
-      <p className=" full-w  text-cyan-600 bg-[url('/calling.png')] bg-cover bg-center w-screen text-5xl text-center flex items-center justify-center">
-        Contact Us
-      </p>
-
+    <div
+      className="w-full min-h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${bg})`,
+      }}
+    >
       <div className="grid grid-cols-1">
-        <div className="flex flex-col items-center justify-center gap-4 h-auto mx-auto p-6 rounded-lg mt-5 w-2/5 border bg-cyan-200">
-          <div className="flex-grow flex items-center justify-center mb-4">
-            <img src={logo} alt="Logo Image" className="w-1/4 h-auto" /> {/* Logo Image */}
-          </div>
+        <div className="flex flex-col items-center justify-center gap-4 h-auto mx-auto p-6 rounded-lg mt-32 mb-20 w-2/5 bg-teal-600">
+          <p className="w-screen text-white bg-cover bg-center text-5xl text-center flex items-center justify-center font-medium mb-8">
+            Contact Us
+          </p>
+
+          {/* Display the error message here */}
+          {formError && (
+            <p className="text-red-500 text-center mb-4">{formError}</p>
+          )}
 
           {/* First Name Input */}
           <input
@@ -85,9 +100,9 @@ const ContactUs = () => {
             placeholder="First Name *"
             value={firstName}
             onChange={handleName(setFirstName, setFirstNameError)}
-            maxLength={50} /* limit length to 50 characters */
-            className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${
-              firstNameError ? "border-red-500" : "border-gray-600"
+            maxLength={50} 
+            className={`pl-3 text-left rounded-md w-full h-12 font-light placeholder-slate-400 ${
+              firstNameError ? "border-red-500" : "border-teal-600"
             }`}
           />
           {/* Last Name Input */}
@@ -96,9 +111,9 @@ const ContactUs = () => {
             placeholder="Last Name *"
             value={lastName}
             onChange={handleName(setLastName, setLastNameError)}
-            maxLength={50} /* limit length to 50 characters */
-            className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${
-              lastNameError ? "border-red-500" : "border-gray-600"
+            maxLength={50} 
+            className={`pl-3 text-left rounded-md w-full h-12 font-light placeholder-slate-400 ${
+              lastNameError ? "border-red-500" : "border-teal-600"
             }`}
           />
 
@@ -108,9 +123,9 @@ const ContactUs = () => {
             placeholder="youremail@example.com *"
             value={email}
             onChange={handleEmail(setEmail, setEmailError)}
-            maxLength={125} /* limit length to 125 characters */
-            className={`pl-3 text-left rounded-md border-2 w-full h-12 font-light placeholder-slate-400 ${
-              emailError ? "border-red-500" : "border-gray-600"
+            maxLength={125}/* limit length to 125 characters */
+            className={`pl-3 text-left rounded-md w-full h-12 font-light placeholder-slate-400 ${
+              emailError ? "border-red-500" : "border-teal-600"
             }`}
           />
           {/* Message Textarea */}
@@ -119,14 +134,14 @@ const ContactUs = () => {
             value={message}
             onChange={handleMessage(setMessage, setMessageError)}
             maxLength={500} /* limit length to 500 characters */
-            className={`pl-3 text-left rounded-md border-2 w-full h-auto min-h-40 font-light placeholder-slate-400 ${
-              messageError ? "border-red-500" : "border-gray-600"
+            className={`pl-3 text-left rounded-md w-full h-auto min-h-40 font-light placeholder-slate-400 ${
+              messageError ? "border-red-500" : "border-teal-600"
             }`}
           />
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
-            className="transition ease-in-out delay-500 hover:-translate-y-1 hover:scale-110 hover:bg-sky-500 duration-100 pl-3 rounded-full bg-cyan-600 w-60 h-12 font-extrabold"
+            className="transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-teal-500 pl-3 rounded-full bg-teal-800 w-60 h-12 font-bold"
           >
             <p className="text-slate-50">Send Message</p>
           </button>

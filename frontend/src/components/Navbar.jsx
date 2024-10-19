@@ -56,7 +56,11 @@ const Navbar = () => {
                 About
               </Link>
             </li>
-
+            <li>
+              <Link to="/contact" className="text-teal-600 hover:text-gray-300">
+                Contact Us
+              </Link>
+            </li>
             {user ? (
               <>
                 <li className="relative">

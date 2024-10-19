@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import image1 from "../assets/bg2.jpg"; // Adjust path as needed
-import image2 from "../assets/bg1.jpg"; // Adjust path as needed
-import image3 from "../assets/bg2.jpeg"; // Adjust path as needed
+import image1 from "../assets/bg2.jpg"; 
+import image2 from "../assets/bg1.jpg"; 
+import image3 from "../assets/bg2.jpeg"; 
 
 const images = [image1, image2, image3];
 

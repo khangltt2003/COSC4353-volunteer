@@ -5,3 +5,26 @@
 .form-large-text {
   @apply text-base; /* Apply the desired Tailwind text size utility class */
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Optional: adds a slight upward motion */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0; /* Start as invisible */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Transition for opacity and position */
+}
+
+.fade-in.visible {
+  opacity: 1; /* Fully visible when in view */
+  animation: fadeIn 0.5s forwards; /* Trigger the fade-in animation */
+}
+
+
