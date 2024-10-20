@@ -4,7 +4,7 @@
 
 **Step 1: Navigate to the Backend**
 
-Open the terminal in Visual Studio Code. If you're currently in the frontend, navigate to the backend by running:
+Open the terminal in Visual Studio Code. If you're currently in the root directory, navigate to the backend by running:
 ```bash
 cd backend
 ```
