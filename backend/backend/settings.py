@@ -107,6 +107,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': "volunteer-app",
+#         'USER': "postgres",
+#         'PASSWORD': "H6SukCIlJ2IBespL",
+#         'HOST': "flashily-divine-salamander.data-1.use1.tembo.io",
+#         'PORT': "5432"
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
