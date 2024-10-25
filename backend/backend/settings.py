@@ -96,28 +96,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+asdf= "u!6L8=_sa0_7EYy{vR)}"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
-        'PORT': os.environ.get('DATABASE_POST')
+        'NAME': 'talkconnect',
+        'USER': 'postgres',
+        'PASSWORD': asdf,
+        'HOST': "database-1.cj8aogiaar9a.us-east-1.rds.amazonaws.com",
+        'PORT': "5432"
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': "volunteer-app",
-#         'USER': "postgres",
-#         'PASSWORD': "H6SukCIlJ2IBespL",
-#         'HOST': "flashily-divine-salamander.data-1.use1.tembo.io",
-#         'PORT': "5432"
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
