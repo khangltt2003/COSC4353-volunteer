@@ -11,7 +11,7 @@ cd backend
 
 **Step 2: Get Database Config**
 
-In settings.py, comment lines 100-109 and uncomment lines 110-119
+In settings.py, uncomment line 100.
 
 **Step 3: Install all Dependencies**
 
