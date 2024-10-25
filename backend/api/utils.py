@@ -14,8 +14,10 @@ def match_when_user_update(user):
       if event.date not in user.availability:
         continue
       
-      if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
-        continue
+      if event.skills_needed.all().count() != 0:
+        if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
+          continue
+    
       matched_events.append(event)
       notification = Notification.objects.create(event_id = event.id, user_id = user.id, type ="matched", event_name = event.name)
       user.notifications.add(notification)
@@ -37,8 +39,9 @@ def match_when_event_update(event):
         if event.date not in user.availability:
           continue
         
-        if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
-          continue
+        if event.skills_needed.all().count() != 0:
+          if user.skills.filter(id__in=event.skills_needed.all()).count() < 2:
+            continue
         
         matched_users.append(user)
         notification = Notification.objects.create(event_id = event.id, user_id = user.id, type ="matched", event_name = event.name)
