@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# asdf= "u!6L8=_sa0_7EYy{vR)}"
+asdf= os.environ.get("asdf")
 
 DATABASES = {
     'default': {
