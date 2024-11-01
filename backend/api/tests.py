@@ -74,6 +74,11 @@ class SkillModelTest(TestCase):
         self.assertEqual(self.skill.name, "Nursing")
         self.assertEqual(Skill.objects.count(), 1)
 
+    def test_skill_unique_name(self):
+        Skill.objects.create(name="First Aid")
+        with self.assertRaises(Exception):  # Django should raise an IntegrityError for duplicate names
+            Skill.objects.create(name="First Aid")
+
 class NotificationModelTest(TestCase):
     """Test the Notification model."""
 
@@ -90,6 +95,18 @@ class NotificationModelTest(TestCase):
         """Test notification is created correctly."""
         self.assertEqual(self.notification.event_name, "Sample Event")
         self.assertEqual(self.notification.is_read, False)
+
+    def test_mark_notification_as_read(self):
+        notification = Notification.objects.create(
+            user_id=self.user.id,
+            event_id=1,
+            event_name="Health Camp",
+            type="Event Update"
+        )
+        notification.is_read = True
+        notification.save()
+        updated_notification = Notification.objects.get(id=notification.id)
+        self.assertTrue(updated_notification.is_read)
 
 class EventModelTest(TestCase):
     """Test the Event model."""
@@ -151,6 +168,16 @@ class EventModelTest(TestCase):
         self.assertEqual(self.event.date, updated_data['date'])  # This should now match
         self.assertEqual(self.event.time, updated_data['time'])  # This should also now match
         self.assertEqual(self.event.urgency, updated_data['urgency'])
+
+    def test_update_event_urgency(self):
+        event = Event.objects.create(
+            name="Health Workshop",
+            urgency="low"
+        )
+        event.urgency = "medium"
+        event.save()
+        updated_event = Event.objects.get(id=event.id)
+        self.assertEqual(updated_event.urgency, "medium")    
 
     def test_delete_event(self):
         """Test deleting an existing event."""
